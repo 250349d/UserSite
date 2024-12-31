@@ -1,0 +1,32 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>お知らせ情報一覧</title>
+</head>
+<body>
+    <h1>お知らせ情報一覧</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>件名</th>
+        <th>送信日時</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in objects %}
+      <tr>
+        <th>{{ object.title }}</th>
+	<td>{{ object.created_at }}</td>
+	<td>
+          <a href="{% url 'notification_app:detail' notification_id=object.id %}">詳細</a>
+	</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    <p><a href="/client/mypage/">戻る</a></p>
+</body>
+
+</html>
