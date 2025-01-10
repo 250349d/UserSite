@@ -1,0 +1,79 @@
+{% comment %} <!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>ユーザー登録</title>
+</head>
+<body>
+    <h1>ユーザー登録</h1>
+    <form action="/login_app/signup/" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="csrfmiddlewaretoken" value="ZYMArUBrVf9VswRMm2H7BLzC1XaP8v8iLGo4Co9gSRneFJjvryGCDDnk41BvISEp">
+        <p>
+            <label for="id_username">ユーザー名:</label>
+            <input type="text" name="username" maxlength="150" required id="id_username">
+            <span class="helptext">150文字以内。日本語のみ使用可能です。</span>
+        </p>
+        <p>
+            <label for="id_email">メールアドレス:</label>
+            <input type="email" name="email" maxlength="254" autofocus required id="id_email">
+        </p>
+        <p>
+            <label for="id_password1">パスワード:</label>
+            <input type="password" name="password1" autocomplete="new-password" required id="id_password1">
+            <span class="helptext">
+        <ul>
+            <li>あなたの他の個人情報と似ているパスワードにはできません。</li>
+            <li>パスワードは最低 8 文字以上必要です。</li>
+            <li>よく使われるパスワードにはできません。</li>
+            <li>数字だけのパスワードにはできません。</li>
+        </ul>
+        </span>
+        </p>
+        <p>
+            <label for="id_password2">パスワード(確認用):</label>
+            <input type="password" name="password2" autocomplete="new-password" required id="id_password2">
+            <span class="helptext">確認のため、再度パスワードを入力してください。</span>
+        </p>
+        <p>
+            <label for="id_telephone_number">電話番号:</label>
+            <input type="text" name="telephone_number" maxlength="15" required id="id_telephone_number">
+        </p>
+        <p>
+            <label for="id_birth_date">生年月日:</label>
+            <input type="text" name="birth_date" id="id_birth_date">
+        </p>
+        <p>
+            <label for="id_town_area">町域:</label>
+            <input type="text" name="town_area" maxlength="150" id="id_town_area">
+            <span class="helptext">150文字以内。日本語のみ使用可能です。</span>
+        </p>
+        <p>
+            <label for="id_other_address">番地、マンション名:</label>
+            <input type="text" name="other_address" maxlength="150" id="id_other_address">
+            <span class="helptext">150文字以内。日本語のみ使用可能です。</span>
+        </p>
+        <p>
+            <input type="submit" value="登録">
+        </p>
+    </form>
+</body>
+</html> {% endcomment %}
+
+
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>ユーザー登録</title>
+</head>
+<body>
+    <h1>ユーザー登録</h1>
+    <form action="{% url 'signup' %}" method="post">
+    {% csrf_token %}
+        {{ form.as_p }}
+        <p><input type="submit" value="登録"></p>
+    </form>
+</body>
+</html>  

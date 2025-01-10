@@ -1,0 +1,21 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <link href="{% static 'login_app/css/cpass.css' %}" rel ="stylesheet">
+    <title>パスワード変更</title>
+</head>
+<body>
+    <h1>パスワード変更</h1>
+    <form action="{% url 'passwordchange'%}" method="POST">
+	{% csrf_token %}
+
+	{{form.as_p}}
+    <p><button class="save" type ="submit">保存</button>
+    {% comment %} <p><input type="submit" value="保存"></p> {% endcomment %}
+    <p><a href="{% url 'logout'%}">ログアウト</a></p>
+    <p><a href="{% url 'user'%}">戻る</a></p>
+</body>
+
+</html>
