@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
+from django.utils import timezone
 
 from .models import Task, Transaction, Order, Request
 
@@ -237,7 +238,13 @@ def reject_request(request):
 			request.full_clean()
 			request.save()
 
-			#send_mail() #非承認メールを送信
+			#非承認メールを送信
+			send_mail(
+				'【Flatosa】申請が非承認となりました',
+				'あなたの申請が非承認となりました。詳細はアプリをご確認ください。',
+				'from@example.com',
+				['to@exxample.com'],
+			)
 
 			is_success = True
 		except Exception as e:
@@ -293,20 +300,50 @@ def check_payment(request):
 def payment(request, task_id):
 	if request.method == 'POST':
 		is_success = False
-		error_message = "エラーが発生しました"
+		error_message = "お支払い中に何らかの問題が起きました"
 		try:
 			data = json.loads(request.body)
 
 			task_id = data.get('task_id')
 			task = Task.objects.get(pk=task_id)
 
-			# 支払い済みの注文ステータスに変更
-			task.status = '5'
-			task.save()
+			name = data.get('name')
+			card_number = data.get('card_number')
+			cvc = data.get('cvc')
+			expiry_date = data.get('expiry_date')
 
-			# 取引情報の支払い日付を設定
+			# TODO: 疑似的な決済処理
+			if not name or not card_number or not cvc or not expiry_date:
+				error_message = "入力内容に誤り、または空欄があります"
+				raise Exception(error_message)
+
+			if len(card_number) != 16 or not card_number.isdigit():
+				error_message = "カード番号が無効です"
+				raise Exception(error_message)
+
+			if len(cvc) != 3 or not cvc.isdigit():
+				error_message = "CVCが無効です"
+				raise Exception(error_message)
+
+			try:
+				expiry_month, expiry_year = map(int, expiry_date.split('/'))
+			except Exception:
+				error_message = "有効期限の入力形式が無効です"
+				raise Exception(error_message)
+
+			if expiry_month < 1 or expiry_month > 12:
+				error_message = "有効期限の月が無効です"
+				raise ValueError(error_message)
+			current_year = timezone.now().year % 100 # 2025 -> 25
+			current_month = timezone.now().month
+			if expiry_year < current_year or (expiry_year == current_year and expiry_month < current_month):
+				error_message = "有効期限が切れています"
+				raise ValueError(error_message)
+
+			# DBに支払い日時を保存
 			transaction = Transaction.objects.get(task=task)
-			transaction.payment_fee_date = data.get('payment_fee_date')
+			transaction.payment_fee_date = timezone.now()
+			transaction.full_clean()
 			transaction.save()
 
 			is_success = True
@@ -315,4 +352,6 @@ def payment(request, task_id):
 		finally:
 			return JsonResponse({'success': is_success, 'error_message': error_message})
 	else:
-		return render(request, 'client_app/payment.html', {'task_id': task_id})
+		transaction = get_object_or_404(Transaction, task_id=task_id)
+		total_cost = transaction.total_cost or 0
+		return render(request, 'client_app/payment.html', {'task_id': task_id, 'total_cost': total_cost})

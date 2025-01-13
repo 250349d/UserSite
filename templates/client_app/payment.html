@@ -7,9 +7,11 @@
 	<title>ふらっとさ</title>
 	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 	<script>
-		const paymentUrl= "{% url 'client_app:payment' %}";
+		const checkPaymentUrl= "{% url 'client_app:check-payment' %}";
+		const paymentUrl= "{% url 'client_app:payment' 0 %}".slice(0, -2); // ベースURL
+		const totalCost = "{{ total_cost }}";
 	</script>
-	<script src="{% static 'client_app/js/check_payment.js' %}"></script>
+	<script src="{% static 'client_app/js/payment.js' %}"></script>
 </head>
 <body>
 	<label for="name">名義人:</label>
@@ -24,6 +26,6 @@
 	<label for="expiry-date">有効期限 (MM/YY):</label>
 	<input type="text" id="expiry-date" name="expiry_date">
 	<br>
-	<button type="button" onclick="payment(taskId)">支払う</button>
+	<button type="button" onclick="payment('{{ task_id }}')">支払う</button>
 </body>
 </html>
