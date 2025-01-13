@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>依頼作成</title>
+    <style>
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .item-form {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        #items-container {
+            margin: 20px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="datetime-local"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .error-message {
+            color: #dc3545;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            background-color: #f8d7da;
+        }
+        .success-message {
+            color: #155724;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            background-color: #d4edda;
+        }
+    </style>
+</head>
+<body>
+    <h1>依頼を作成</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if errors %}
+        <div class="error-message">
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">依頼件名:</label>
+            <input type="text" id="title" name="title" value="{{ form_data.title|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="shop_name">店舗名:</label>
+            <input type="text" id="shop_name" name="shop_name" value="{{ form_data.shop_name|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="limit_of_time">配達期限:</label>
+            <input type="datetime-local" id="limit_of_time" name="limit_of_time" value="{{ form_data.limit_of_time|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="shop_post_code">店舗の郵便番号:</label>
+            <input type="text" id="shop_post_code" name="shop_post_code" value="{{ form_data.shop_post_code|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="shop_address">店舗の住所:</label>
+            <input type="text" id="shop_address" name="shop_address" value="{{ form_data.shop_address|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="shop_street_address">店舗の番地:</label>
+            <input type="text" id="shop_street_address" name="shop_street_address" value="{{ form_data.shop_street_address|default:'' }}" required>
+        </div>
+
+        <h2>商品情報</h2>
+        <div id="items-container">
+            <div class="item-form" id="item-0">
+                <label for="product_name_0">商品名:</label>
+                <input type="text" name="product_name_0" value="{{ form_data.product_name_0|default:'' }}" required>
+
+                <label for="quantity_0">数量:</label>
+                <input type="number" name="quantity_0" min="1" value="{{ form_data.quantity_0|default:'' }}" required>
+
+                <label for="price_0">単価（円）:</label>
+                <input type="number" name="price_0" min="1" value="{{ form_data.price_0|default:'' }}" required>
+
+                <label for="notes_0">メモ:</label>
+                <textarea name="notes_0" rows="2">{{ form_data.notes_0|default:'' }}</textarea>
+            </div>
+        </div>
+
+        <button type="button" onclick="addItem()">商品を追加</button>
+        <br><br>
+        <button type="submit">依頼を作成</button>
+        <a href="{% url 'requester_home' %}" class="btn-secondary" style="text-decoration: none; color: white; padding: 10px 20px; border-radius: 4px;">依頼者ホームに戻る</a>
+    </form>
+
+    <script>
+        let itemCount = 1;
+
+        function addItem() {
+            const container = document.getElementById('items-container');
+            const newItem = document.createElement('div');
+            newItem.className = 'item-form';
+            newItem.id = `item-${itemCount}`;
+            
+            newItem.innerHTML = `
+                <label for="product_name_${itemCount}">商品名:</label>
+                <input type="text" name="product_name_${itemCount}" required>
+
+                <label for="quantity_${itemCount}">数量:</label>
+                <input type="number" name="quantity_${itemCount}" min="1" required>
+
+                <label for="price_${itemCount}">単価（円）:</label>
+                <input type="number" name="price_${itemCount}" min="1" required>
+
+                <label for="notes_${itemCount}">メモ:</label>
+                <textarea name="notes_${itemCount}" rows="2"></textarea>
+
+                <button type="button" onclick="removeItem(${itemCount})" style="background-color: #dc3545;">削除</button>
+            `;
+            
+            container.appendChild(newItem);
+            itemCount++;
+        }
+
+        function removeItem(id) {
+            const item = document.getElementById(`item-${id}`);
+            if (item) {
+                item.remove();
+            }
+        }
+    </script>
+</body>
+</html>
