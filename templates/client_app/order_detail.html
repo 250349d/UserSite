@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>ふらっとさ</title>
+</head>
+<body>
+	<h1>注文詳細</h1>
+
+	<div>
+		<span>件名</span>
+		<span>{{ task.title }}</span>
+	</div>
+
+	<div class="order-container">
+		<h2>注文内容</h2>
+		<div class="address-container">
+			<p>届け先住所</p>
+			<p>〒{{ task.shop_post_code }}</p>
+			<p>高知県香美市土佐山田町{{ task.shop_address }}{{task.shop_street_address}}</p>
+		</div>
+		<table id="products-table" class="products-table">
+			<thead>
+				<tr>
+					<th>商品名</th>
+					<th>単価</th>
+					<th>個数</th>
+					<th>小計</th>
+					<th>備考</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for order in orders %}
+					<tr>
+						<td>{{ order.product_name }}</td>
+						<td>{{ order.price }}</td>
+						<td>{{ order.quantity }}</td>
+						<td>{{ order.subtotal }}</td>
+						<td>{{ order.notes }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+</body>
+</html>

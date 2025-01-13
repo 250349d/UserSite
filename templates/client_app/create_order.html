@@ -1,0 +1,84 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>ふらっとさ</title>
+	<link rel="stylesheet" href="{% static 'client_app/css/create_order.css' %}">
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+	<script>
+		const submitOrderUrl= "{% url 'client_app:create-order' %}";
+		const checkOrderUrl= "{% url 'client_app:check-order' %}";
+	</script>
+	<script src="{% static 'client_app/js/create_order.js' %}"></script>
+</head>
+<body>
+	<div>
+		<h1>注文作成</h1>
+
+		<div>
+			<label for="title">件名</label>
+			<input type="text" id="title" name="title" required><br>
+		</div>
+
+		<div>
+			<h2>注文詳細</h2>
+			<table>
+				<thead>
+					<tr>
+						<th>商品名</th>
+						<th>単価</th>
+						<th>個数</th>
+						<th>小計</th>
+						<th>備考</th>
+					</tr>
+				</thead>
+				<tbody id="order-fields">
+				</tbody>
+			</table>
+
+			<button type="button" onclick="addOrderField()">商品を追加</button><br>
+		</div>
+
+		<div>
+			<label for="total-price">合計金額:</label>
+			<input id="total-price" type="number" min="0" value="0" readonly> 円<br>
+		</div>
+
+		<div>
+			<label for="limit-of-time">配達期限:</label>
+			<input type="datetime-local" id="limit-of-time" name="limit_of_time" required><br>
+		</div>
+	</div>
+
+	<br>
+
+	<div>
+		<span>店舗情報入力</span>
+
+		<div>
+			<label for="shop-name">店名</label>
+			<input type="text" id="shop-name" name="shop_name" required><br>
+		</div>
+
+		<div>
+			<label for="shop-post-code">郵便番号</label>
+			<input type="text" id="shop-post-code" name="shop_post_code" placeholder="000-0000" required><br>
+		</div>
+
+		<div>
+			<label for="shop-address">高知県香美市土佐山田町</label>
+			<input type="text" id="shop-address" name="shop_address" placeholder="町域" required><br>
+		</div>
+
+		<div>
+			<label for="shop-street-address">番地</label>
+			<input type="text" id="shop-street-address" name="shop_street_address" required><br>
+		</div>
+	</div>
+
+	<button onclick="submitOrder()">注文確定</button>
+	<button onclick="">戻る</button>
+</body>
+</html>

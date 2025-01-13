@@ -1,0 +1,29 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>ふらっとさ</title>
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+	<script>
+		const paymentUrl= "{% url 'client_app:payment' %}";
+	</script>
+	<script src="{% static 'client_app/js/check_payment.js' %}"></script>
+</head>
+<body>
+	<label for="name">名義人:</label>
+	<input type="text" id="name" name="name">
+	<br>
+	<label for="card-number">クレジットカード番号:</label>
+	<input type="text" id="card-number" name="card_number">
+	<br>
+	<label for="cvc">セキュリティコード:</label>
+	<input type="text" id="cvc" name="cvc">
+	<br>
+	<label for="expiry-date">有効期限 (MM/YY):</label>
+	<input type="text" id="expiry-date" name="expiry_date">
+	<br>
+	<button type="button" onclick="payment(taskId)">支払う</button>
+</body>
+</html>

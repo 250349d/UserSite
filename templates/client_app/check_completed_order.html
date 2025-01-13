@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>ふらっとさ</title>
+</head>
+<body>
+	{% for task in tasks %}
+		<div class="order-container">
+			<span>{{ task.title }}>></span>
+			<a href="{% url 'client_app:check-completed-order-detail' task.id %}">注文詳細</a>
+		</div>
+		<div>注文日 {{ task.created_at }}</div>
+		<br>
+	{% endfor %}
+</body>
+</html>

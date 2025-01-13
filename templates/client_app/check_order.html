@@ -1,0 +1,51 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>ふらっとさ</title>
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+	<script>
+		const cancelOrderUrl= "{% url 'client_app:cancel-order' 0 %}".slice(0, -2); // ベースURL
+		const confirmRequestUrl= "{% url 'client_app:confirm-request' 0 %}".slice(0, -2); // ベースURL
+		const acceptRequestUrl= "{% url 'client_app:accept-request' %}"
+		const rejectRequestUrl= "{% url 'client_app:reject-request' %}"
+	</script>
+	<script src="{% static 'client_app/js/check_order.js' %}"></script>
+</head>
+<body>
+	{% for task in tasks %}
+		<div class="order-container">
+			<span>{{ task.title }}>></span>
+			<a href="{% url 'client_app:check-order-detail' task.id %}">注文詳細</a>
+
+			<br>
+
+			<span>
+				{% if task.status == '0' %}
+					注文済み
+				{% elif task.status == '1' %}
+					配達中
+				{% elif task.status == '2' %}
+					承認待ち
+				{% elif task.status == '3' %}
+					再申請待ち
+				{% elif task.status == '4' %}
+					配達完了
+				{% endif %}
+			</span>
+
+			<a href="">チャット</a>
+
+			<br>
+
+			<button type="button" onclick="confirmRequest('{{ task.id }}')">申請確認</button>
+
+			<button type="button" onclick="cancelOrder('{{ task.id }}')">キャンセル</button>
+		</div>
+		<div>注文日 {{ task.created_at }}</div>
+		<br>
+	{% endfor %}
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>ふらっとさ</title>
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+	<script>
+		const checkPaymentUrl= "{% url 'client_app:check-payment' %}";
+		const paymentUrl= "{% url 'client_app:payment' 0 %}".slice(0, -2); // ベースURL
+	</script>
+	<script src="{% static 'client_app/js/check_payment.js' %}"></script>
+</head>
+<body>
+	{% for task in tasks %}
+		<div class="order-container">
+			<span>{{ task.title }}>></span>
+			<a href="{% url 'client_app:check-payment-detail' task.id %}">注文詳細</a>
+
+			<br>
+
+			<button type="button" onclick="showCost('{{ task.id }}')">お支払いへ進む</button>
+		</div>
+		<div>注文日 {{ task.created_at }}</div>
+		<br>
+	{% endfor %}
+</body>
+</html>
