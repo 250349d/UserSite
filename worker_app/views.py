@@ -19,8 +19,8 @@ def receive_request_view(request):
     # 現在時刻で期限切れの依頼を除外
     now = timezone.now()
     pending_tasks = Task.objects.filter(
-        status='P',  # Pending
-        worker=None,
+        status='0',  # 注文済み
+        worker=None, # 配達員が決まっていない
         limit_of_time__gt=now  # 配達期限が現在時刻より後のもののみ
     ).exclude(
         client=request.user
@@ -33,12 +33,11 @@ def confirm_request_view(request, pk):
         Task.objects.select_related('transaction'),
         pk=pk
     )
-    
     if request.method == 'POST':
-        if task.status == 'P' and task.worker is None:
+        if task.status == '0' and task.worker is None:
             try:
                 with transaction.atomic():
-                    task.status = 'A'  # Accepted
+                    task.status = '1'  # Accepted
                     task.worker = request.user
                     task.save()
                     return redirect('accepted_requests')
@@ -66,7 +65,7 @@ def submit_cost_view(request, pk):
     if request.method == 'POST':
         try:
             with transaction.atomic():
-                task.status = 'D'  # Delivered
+                task.status = '1'  # Delivered
                 task.delivery_completion_time = timezone.now()
                 task.save()
 
@@ -75,7 +74,7 @@ def submit_cost_view(request, pk):
                     task=task,
                     time=timezone.now(),
                     price=task.transaction.total_cost,
-                    status='P'  # Pending approval
+                    status='2'  # Pending approval
                 )
                 return redirect('accepted_requests')
         except Exception as e:
@@ -105,7 +104,7 @@ def approve_cost_view(request, pk):
         try:
             with transaction.atomic():
                 completion_request = Request.objects.get(task=task, status='P')
-                completion_request.status = 'A'  # Approved
+                completion_request.status = '1'  # Approved
                 completion_request.save()
 
                 transaction_obj = task.transaction
@@ -142,7 +141,7 @@ def accepted_requests_view(request):
 def completed_requests_view(request):
     completed_tasks = Task.objects.filter(
         worker=request.user,
-        status='D'  # Delivered
+        status='1'  # Delivered
     ).exclude(
         status='C'  # Canceled
     ).order_by('-delivery_completion_time')
