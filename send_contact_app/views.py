@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from .forms import ContactForm
 from django.utils import timezone
-from .models import CustomUser, Contact
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from .models import Contact
+
+CustomUser = get_user_model()
 
 @login_required
 def send_contact_view(request):
