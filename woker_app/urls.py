@@ -1,13 +1,10 @@
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('accounts/login/', views.login_view, name='login'),
-    path('accounts/logout/', views.logout_view, name='logout'),
-    path('signup/', views.signup_view, name='signup'),
-    path('create/', views.create_request, name='create_request'),
+    path('mypage/', views.mypage_view, name='mypage'),
+
     path('receive/', views.receive_request, name='receive_request'),
     path('confirm_request/<int:pk>/', views.confirm_request, name='confirm_request'),
     path('cancel_request/<int:pk>/', views.cancel_request, name='cancel_request'),
