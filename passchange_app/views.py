@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 
 @login_required
-def password_change_view(request):
+def passchage_view(request):
     if request.user.is_authenticated:
         if request.method == "POST":
             form = PasswordChangeForm(user = request.user, data = request.POST)

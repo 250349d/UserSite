@@ -8,7 +8,7 @@ from django.http import HttpResponse
 CustomUser = get_user_model()
 
 @login_required
-def delete_view(request):
+def userdelete_view(request):
     user = request.user
     user = get_object_or_404(CustomUser, id=user.id) # 対象ユーザの抽出
     logout(request)

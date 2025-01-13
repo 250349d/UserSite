@@ -7,7 +7,7 @@ from django.http import HttpResponse
 
 CustomUser = get_user_model()
 
-def password_reset_view(request):
+def passreset_view(request):
     if request.method == "POST":
         data=request.POST
         print(data.get("email"))
