@@ -1,0 +1,51 @@
+.message-container {
+	margin: 10px;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	background-color: skyblue;
+	height: 300px;
+	overflow-y: scroll;
+}
+
+.message {
+	border-bottom: 1px dashed whitesmoke;
+}
+
+.client-message {
+	text-align: left;
+}
+
+.worker-message {
+	text-align: right;
+}
+
+.message-time {
+	font-size: 10px;
+	color: white;
+}
+
+.message-text {
+	font-size: 12px;
+	margin-left: 2px;
+	margin-right: 2px;
+	color: black;
+}
+
+.message-read-flag {
+	font-size: 6px;
+	color: white;
+}
+
+
+.message-input-container {
+	width: 100%;
+	margin: 4px;
+}
+
+.message-input {
+	color: black;
+}
+
+.message-send-button {
+	color: blue;
+}
