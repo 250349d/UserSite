@@ -9,6 +9,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import timezone
 from django.db import transaction
+from django.contrib.auth import get_user_model
+
+# 0: 注文済み, 1: 配達中, 2: 承認待ち, 3: 再申請待ち, 4: 配達完了
+
+CustomUser = get_user_model()
 
 @login_required
 def mypage_view(request):
@@ -16,6 +21,9 @@ def mypage_view(request):
 
 @login_required
 def receive_request_view(request):
+    """
+    受注可能依頼を表示するビュー
+    """
     # 現在時刻で期限切れの依頼を除外
     now = timezone.now()
     pending_tasks = Task.objects.filter(
@@ -29,12 +37,16 @@ def receive_request_view(request):
 
 @login_required
 def confirm_request_view(request, pk):
+    """
+    依頼を受注するビュー
+    """
     task = get_object_or_404(
         Task.objects.select_related('transaction'),
         pk=pk
     )
     if request.method == 'POST':
         if task.status == '0' and task.worker is None:
+            """
             try:
                 with transaction.atomic():
                     task.status = '1'  # Accepted
@@ -44,6 +56,11 @@ def confirm_request_view(request, pk):
             except Exception as e:
                 print(f"Error accepting task: {e}")
                 return HttpResponse("依頼の受注中にエラーが発生しました", status=500)
+            """
+            task.status = '1'  # Accepted
+            task.worker = request.user
+            task.save()
+            return redirect('worker_app:accepted_requests')
         return HttpResponse("この依頼は既に受注されています", status=400)
 
     orders = Order.objects.filter(task=task)
@@ -86,10 +103,11 @@ def submit_cost_view(request, pk):
 @login_required
 def cancel_request_view(request, pk):
     task = get_object_or_404(Task, pk=pk)
-    if request.method == 'POST':
-        task.status = 'C'  # Canceled
-        task.save()
-        return redirect('requester_home')
+    if task.status == '1' and task.worker == request.user.id: # 確認
+        if request.method == 'POST':
+            task.status = 'C'  # Canceled
+            task.save()
+            return redirect('requester_home')
     return render(request, 'worker_app/cancel_request.html', {'task': task})
 
 @login_required
@@ -120,10 +138,13 @@ def approve_cost_view(request, pk):
 
 @login_required
 def accepted_requests_view(request):
+    """
+    受注済みの依頼を確認するビュー（一覧）
+    """
     now = timezone.now()
-    tasks = Task.objects.select_related('transaction').prefetch_related('orders').filter(
+    tasks = Task.objects.select_related('transaction').prefetch_related('order').filter(
         worker=request.user,
-        status='A'  # Accepted
+        status='1'  # Accepted
     ).order_by('limit_of_time')
     
     # 各タスクの期限状態を確認
@@ -134,14 +155,14 @@ def accepted_requests_view(request):
             time_remaining = task.limit_of_time - now
             # 残り1時間以内の場合は警告
             task.is_urgent = time_remaining.total_seconds() <= 3600
-    
+
     return render(request, 'worker_app/accepted_requests.html', {'tasks': tasks})
 
 @login_required
 def completed_requests_view(request):
     completed_tasks = Task.objects.filter(
         worker=request.user,
-        status='1'  # Delivered
+        status='4'  # Delivered
     ).exclude(
         status='C'  # Canceled
     ).order_by('-delivery_completion_time')
@@ -152,7 +173,7 @@ def completed_requests_view(request):
 def reward_check_view(request):
     completed_tasks = Task.objects.filter(
         worker=request.user,
-        status='D'  # Delivered
+        status='4'  # Delivered
     ).exclude(
         status='C'  # Canceled
     )
