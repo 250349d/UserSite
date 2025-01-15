@@ -131,17 +131,32 @@ class Transaction(models.Model):
 		null=True,
 		verbose_name="サービス代金支払い日付"
 	)
+    pay_fee = models.BooleanField(
+        blank=True,
+        null=True,
+        default=False
+    )
 	courier_item_payment_date = models.DateTimeField(
 		blank=True,
 		null=True,
 		verbose_name="商品代金支払い日付"
 		# TODO: これなに？
 	)
+    pay_courier_item = models.BooleanField(
+        blank=True,
+        null=True,
+        default=False
+    )
 	courier_reward_date = models.DateTimeField(
 		blank=True,
 		null=True,
 		verbose_name="報酬支払日付"
 	)
+    pay_courier_reward = models.BooleanField(
+        blank=True,
+        null=True,
+        default=False
+    )
 
 	def __str__(self):
 		return f"Transaction {self.id} - Total Cost: {self.total_cost}"
