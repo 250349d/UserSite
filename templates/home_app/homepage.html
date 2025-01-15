@@ -6,7 +6,8 @@
     <title>mypage</title>
 </head>
 <body>
-    <p><a href="/login-app/login/">ログイン</a></p>
+    <p><a href="{% url 'login_app:login' %}">ログイン</a></p>
+    <p><a href="{% url 'signup_app:signup' %}">新規会員登録</a></p>
 </body>
 
 </html>
