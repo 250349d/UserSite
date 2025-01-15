@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>依頼受注</title>
+    <style>
+        .request-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .request-info {
+            margin: 5px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .cost {
+            font-size: 1.2em;
+            color: #28a745;
+            font-weight: bold;
+        }
+        .deadline {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .shop-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>依頼受注</h1>
+    <div class="request-list">
+        {% for task in tasks %}
+            <div class="request-card">
+                <div class="request-info"><strong>依頼件名:</strong> {{ task.title }}</div>
+                <div class="request-info"><strong>店舗名:</strong> {{ task.shop_name }}</div>
+                <div class="shop-info">
+                    <div class="request-info"><strong>店舗住所:</strong> {{ task.shop_address }}</div>
+                    <div class="request-info"><strong>店舗番地:</strong> {{ task.shop_street_address }}</div>
+                    <div class="request-info"><strong>郵便番号:</strong> {{ task.shop_post_code }}</div>
+                </div>
+                {% if task.transaction %}
+                    <div class="request-info cost"><strong>合計金額:</strong> {{ task.transaction.total_cost }}円</div>
+                    <div class="request-info"><strong>配達料:</strong> {{ task.transaction.delivery_fee }}円</div>
+                {% endif %}
+                <div class="request-info deadline"><strong>配達期限:</strong> {{ task.limit_of_time|date:"Y/m/d H:i" }}</div>
+                
+                <h3>注文商品:</h3>
+                {% for order in task.orders.all %}
+                    <div class="request-info">
+                        <strong>{{ order.product_name }}</strong>
+                        {{ order.quantity }}個 × {{ order.price }}円
+                        {% if order.notes %}
+                            <br><small>備考: {{ order.notes }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                
+                <a href="{% url 'worker_app:confirm_request' pk=task.id %}" class="btn">この依頼を受注する</a>
+            </div>
+        {% empty %}
+            <p>現在、受注可能な依頼はありません。</p>
+        {% endfor %}
+    </div>
+    <br>
+    <a href="{% url 'worker_app:mypage' %}" class="btn" style="background-color: #6c757d;">ホームに戻る</a>
+</body>
+</html>

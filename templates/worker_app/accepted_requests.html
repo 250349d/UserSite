@@ -1,0 +1,84 @@
+{% extends 'worker_app_temp/base.html' %}
+{% load custom_filters %}
+
+{% block title %}受注済み依頼一覧{% endblock %}
+
+{% block content %}
+    <h1>受注済み依頼一覧</h1>
+    
+    {% if not tasks %}
+        <p class="empty-message">現在、受注している依頼はありません。</p>
+    {% else %}
+        {% for task in tasks %}
+            <div class="card {% if task.is_overdue %}danger{% elif task.is_urgent %}warning{% endif %}">
+                {% if task.is_overdue %}
+                    <div class="badge badge-danger">期限切れ</div>
+                {% elif task.is_urgent %}
+                    <div class="badge badge-warning">急いで配達してください！</div>
+                {% endif %}
+                
+                <h2>{{ task.title }}</h2>
+                <div class="info-item"><strong>配達期限:</strong> {{ task.limit_of_time|date:"Y/m/d H:i" }}</div>
+                
+                <div class="info-section">
+                    <h3>店舗情報</h3>
+                    <div class="info-item"><strong>店舗名:</strong> {{ task.shop_name }}</div>
+                    <div class="info-item"><strong>住所:</strong> {{ task.shop_address }}</div>
+                    <div class="info-item"><strong>番地:</strong> {{ task.shop_street_address }}</div>
+                    <div class="info-item"><strong>郵便番号:</strong> {{ task.shop_post_code }}</div>
+                </div>
+                
+                {% if task.orders.all %}
+                    <div class="info-section">
+                        <h3>注文商品</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>商品名</th>
+                                    <th>数量</th>
+                                    <th>単価</th>
+                                    <th>小計</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in task.orders.all %}
+                                    <tr>
+                                        <td>{{ order.product_name }}</td>
+                                        <td>{{ order.quantity }}</td>
+                                        <td>{{ order.price }}円</td>
+                                        <td>{{ order.quantity|multiply:order.price }}円</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                
+                {% if task.transaction %}
+                    <div class="info-section">
+                        <div class="info-item"><strong>商品合計:</strong> {{ task.transaction.total_cost }}円</div>
+                        <div class="info-item"><strong>配達料:</strong> {{ task.transaction.delivery_fee }}円</div>
+                        <div class="info-item"><strong>総合計:</strong> {{ task.transaction.total_cost|add:task.transaction.delivery_fee }}円</div>
+                    </div>
+                {% endif %}
+                
+                {% if task.is_overdue %}
+                    <div class="danger">
+                        この依頼は期限を過ぎています。至急配達を完了してください。
+                    </div>
+                {% elif task.is_urgent %}
+                    <div class="warning">
+                        配達期限まで残り1時間を切っています。急いで配達を完了してください。
+                    </div>
+                {% endif %}
+                
+                <div class="button-group">
+                    <a href="{% url 'worker_app:submit_cost' pk=task.id %}" class="btn btn-success">配達完了・費用申請</a>
+                    <a href="{% url 'worker_app:cancel_request' pk=task.id %}" class="btn btn-danger" onclick="return confirm('この依頼をキャンセルしますか？');">キャンセル</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <a href="{% url 'worker_app:mypage' %}" class="btn btn-secondary">ホームに戻る</a>
+{% endblock %}

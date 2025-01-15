@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>配達費用申請</title>
+</head>
+<body>
+    <h1>配達費用申請</h1>
+    <h2>依頼詳細</h2>
+    <p><strong>タイトル:</strong> {{ request.title }}</p>
+    <p><strong>説明:</strong> {{ request.description }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="delivery_cost">配達費用 (円):</label>
+            <input type="number" id="delivery_cost" name="delivery_cost" required min="0">
+        </div>
+        <button type="submit">申請する</button>
+    </form>
+    
+    <a href="{% url 'worker_app:accepted_requests' %}">受注済みの依頼一覧に戻る</a>
+</body>
+</html>

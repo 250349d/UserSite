@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>完了済みの依頼</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .completed {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align: right;">
+        {% if user.is_authenticated %}
+            <p>{{ user.username }}さん | <a href="{% url 'login_app:logout' %}">ログアウト</a></p>
+        {% else %}
+            <p><a href="{% url 'login_app:login' %}">ログイン</a> | <a href="{% url 'signup_app:signup' %}">新規登録</a></p>
+        {% endif %}
+    </div>
+
+    <h1>完了済みの依頼一覧</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>タイトル</th>
+                <th>説明</th>
+                <th>配達費用</th>
+                <th>報酬（25%）</th>
+                <th>依頼者</th>
+                <th>完了日時</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in completed_requests %}
+                <tr>
+                    <td>{{ request.title }}</td>
+                    <td>{{ request.description }}</td>
+                    <td>{% if request.cost %}{{ request.cost.amount }}円{% else %}未設定{% endif %}</td>
+                    <td>{% if request.cost %}{{ request.cost.reward }}円{% else %}0円{% endif %}</td>
+                    <td>{{ request.created_by.username }}</td>
+                    <td>{{ request.created_at|date:"Y/m/d H:i" }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">完了済みの依頼はありません。</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px;">
+        <a href="{% url 'worker_app:mypage' %}">ホームに戻る</a>
+    </div>
+</body>
+</html>

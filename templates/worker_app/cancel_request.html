@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>依頼キャンセル</title>
+</head>
+<body>
+    <h1>依頼キャンセル</h1>
+    <p>以下の依頼をキャンセルしますか？</p>
+    <p><strong>タイトル:</strong> {{ task.title }}</p>
+    <!--<p><strong>詳細:</strong> {{ task.description }}</p>-->
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">キャンセルする</button>
+    </form>
+    <a href="{% url 'worker_app:mypage' %}">戻る</a>
+</body>
+</html>

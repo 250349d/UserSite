@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>マイページ</title>
+</head>
+<body>
+    <div style="text-align: right;">
+            <a href="{% url 'login_app:logout' %}">ログアウト</a>
+            <a href="{% url 'userdelete_app:userdelete' %}">退会</a>
+            <a href="{% url 'send_contact_app:send_contact' %}">お問い合わせ</a>
+            <a href="{% url 'notification_app:list' %}">お知らせ</a>
+            <a href="{% url 'client_app:mypage' %}">注文者用ページへ</a>
+    </div>
+
+    <h1>マイページ</h1>
+
+    <div>
+        <h2>配送関連</h2>
+        <h3>配達員メニュー</h3>
+        <ul>
+            <li><a href="{% url 'worker_app:receive_request' %}">受注ページに移動</a></li>
+            <li><a href="{% url 'worker_app:accepted_requests' %}">受注済みの依頼一覧</a></li>
+            <li><a href="{% url 'worker_app:completed_requests' %}">完了済みの依頼一覧</a></li>
+            <li><a href="{% url 'worker_app:reward_check' %}">報酬確認</a></li>
+        </ul>
+
+    </div>
+</body>
+</html>

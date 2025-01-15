@@ -31,4 +31,4 @@ def login_view(request):
 def logout_view(request):
     logout(request)
 
-    return render(request, 'login_app/logout.html')
+    return redirect(to='/homepage/')

@@ -17,4 +17,4 @@ def signup_view(request):
         'form': form
     }
 
-    return render(request, 'login_app/signup.html', param)
+    return render(request, 'signup_app/signup.html', param)

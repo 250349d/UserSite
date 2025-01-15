@@ -7,6 +7,7 @@ app_name = 'client_app'
 urlpatterns = [
 	# 注文機能
 	path('create-order/', views.create_order, name='create-order'),
+	path('mypage/', TemplateView.as_view(template_name='client_app/mypage.html'), name='mypage'),
 
 	# 注文確認機能
 	path('check-order/', views.check_order, name='check-order'),

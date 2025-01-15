@@ -17,6 +17,6 @@ def passreset_view(request):
         user.save()
         print(new_password)
         #sendmail()でメールを送信
-        return redirect(to="/login_app/login/")
+        return redirect(to="/login-app/login/")
     else:
         return render(request, "passreset_app/password_reset_request.html")

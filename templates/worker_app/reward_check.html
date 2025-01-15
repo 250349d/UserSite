@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>報酬確認</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>報酬確認</h1>
+    
+    <div>
+        <h2>報酬実績</h2>
+        <p>完了した依頼数: {{ completed_count }}件</p>
+        <p>合計報酬: {{ total_reward }}円</p>
+    </div>
+
+    <h2>完了済みの依頼一覧</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>タイトル</th>
+                <th>配達費用</th>
+                <th>報酬（25%）</th>
+                <th>依頼者</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in requests %}
+                <tr>
+                    <td>{{ request.title }}</td>
+                    <td>{% if request.cost %}{{ request.cost.amount }}円{% else %}未設定{% endif %}</td>
+                    <td>{% if request.cost %}{{ request.cost.reward }}円{% else %}0円{% endif %}</td>
+                    <td>{{ request.created_by.username }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">完了済みの依頼はありません。</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px;">
+        <a href="{% url 'worker_app:mypage' %}">ホームに戻る</a>
+    </div>
+</body>
+</html>

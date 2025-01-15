@@ -1,0 +1,72 @@
+ /* 共通*/
+ .logo{
+    text-align:center;
+ } 
+
+.furattosalogo{
+    width:60%;
+    height:auto;
+ }   
+
+form {
+    text-align:center;
+    max-width: 100%;
+    margin: 50px auto;
+    padding: 20px;
+    /* background-color: #f9f9f9; 
+    border: 1px solid #ddd; */
+} 
+
+/* 各入力フィールドのスタイル */
+form input[type="text"],
+form input[type="password"] {
+    width: 50%;
+    padding: 10px;
+    margin-bottom: 30px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+form a {
+    margin-bottom: 10px;  /* 必要な空白の大きさに調整 */
+}
+
+/* ログインボタン */
+form input[type="submit"] {
+    width:50%;
+    margin-top: 150px;  /* 必要な空白の大きさに調整 */
+    background-color: #fff;
+    border: solid 2px #2495e0;
+    color: #2495e0;
+    border-radius: 10px;        /*図形の角の丸さ */
+    padding: 8px 13px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+form input[type="submit"]:hover {
+    color:  #fff;
+    background-color: #2495e0;
+}
+
+/* パスワード再設定 */
+form .passreset{
+    color: #2495e0;
+}
+
+form .input_mail{
+    margin-top:50px;  /* 必要な空白の大きさに調整 */
+    font-size: 18px;
+}
+
+form input[type="email"] {
+    width:50%;
+    margin-top:20px;  /* 必要な空白の大きさに調整 */
+    font-size: 18px;
+}
+
+/* 新規登録 */
+form .signup_user{
+    color: #2495e0;
+}
