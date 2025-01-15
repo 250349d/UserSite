@@ -21,7 +21,7 @@ def passchange_view(request):
         param = {
             'form': form
         }
-        return render(request, 'passwordchange_app/cpass.html' ,param)
+        return render(request, 'passchange_app/cpass.html' ,param)
             
     else:
         return redirect(to='/client_app/mypage/')

@@ -16,7 +16,7 @@
     {% csrf_token %}
         {{ form.as_p }}
         <p><input type="hidden" name="next" value="{{next}}"></p>
-        <p><a href="{% url 'password_reset'%}">▶︎パスワードを忘れた方はこちら</a></p>
+        <p><a href="{% url 'passreset_app:passreset'%}">▶︎パスワードを忘れた方はこちら</a></p>
         <p><input type="submit" value="ログイン"></p>
     </form>
 </body>

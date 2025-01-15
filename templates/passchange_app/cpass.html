@@ -8,14 +8,14 @@
 </head>
 <body>
     <h1>パスワード変更</h1>
-    <form action="{% url 'passwordchange'%}" method="POST">
+    <form action="{% url 'passchange_app:passchange'%}" method="POST">
 	{% csrf_token %}
 
 	{{form.as_p}}
     <p><button class="save" type ="submit">保存</button>
     {% comment %} <p><input type="submit" value="保存"></p> {% endcomment %}
-    <p><a href="{% url 'logout'%}">ログアウト</a></p>
-    <p><a href="{% url 'user'%}">戻る</a></p>
+    <p><a href="{% url 'login_app:logout'%}">ログアウト</a></p>
+    <p><a href="{% url 'client_app:mypage'%}">戻る</a></p>
 </body>
 
 </html>
