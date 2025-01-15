@@ -15,7 +15,7 @@ def passchange_view(request):
             if form.is_valid():
                 form.save()
                 update_session_auth_hash(request, form.user)
-                return redirect(to='/client_app/mypage/')
+                return redirect('client_app:mypage')
         else:
             form = PasswordChangeForm(user = request.user)
         param = {
@@ -24,4 +24,4 @@ def passchange_view(request):
         return render(request, 'passchange_app/cpass.html' ,param)
             
     else:
-        return redirect(to='/client_app/mypage/')
+        return redirect(to='client_app:mypage')
