@@ -1,0 +1,25 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>あなたの情報</title>
+</head>
+<body>
+    <h1>{{user.username}}</h1>
+    <p>姓：{{user.last_name}}</p>
+    <p>名：{{user.first_name}}</p>
+    <p>連絡先：{{user.email}}</p>
+    <p>電話番号：{{user.telephone_number}}</p>
+    <p>住所：{{user.address}}</p>
+    <p>番地以下：{{user.street_address}}</p>
+    <p>生年月日：{{user.birthdate}}</p>
+    
+    <p>アカウント作成日：{{user.date_joined}}</p>
+    <p><a href="{% url 'other'%}">他のユーザーの情報</a></p>
+    <p><a href="{% url 'logout'%}">ログアウト</a></p>
+    <p><a href="{% url 'passwordchange'%}">パスワード変更</a></p>
+    <p><a href="{% url 'delete'%}">退会</a></p>
+</body>
+
+</html>

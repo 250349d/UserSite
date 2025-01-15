@@ -11,7 +11,7 @@
     <div class="logo">
         <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}"  width="246" height="82"> 
     </div>
-    <form action="{% url 'signup_app:signup' %}" method="post">
+    <form action="{% url 'signup' %}" method="post">
         <h2 class="signup_user">ユーザー登録</h2>
         {% csrf_token %}
         {{ form.as_p }}

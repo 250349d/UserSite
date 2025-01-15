@@ -5,17 +5,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{% static 'login_app/css/sample.css' %}" rel ="stylesheet">
-    <title>ユーザー登録</title>
+    <title>ログインページ</title>
 </head>
 <body>
     <div class="logo">
         <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}"  width="246" height="82"> 
+        {% comment %} width="984" height="329" {% endcomment %}
     </div>
-    <form action="{% url 'signup_app:signup' %}" method="post">
-        <h2 class="signup_user">ユーザー登録</h2>
-        {% csrf_token %}
+    <form action="{% url 'login' %}" method="post">
+    {% csrf_token %}
         {{ form.as_p }}
-        <p><input type="submit" value="登録"></p>
+        <p><input type="hidden" name="next" value="{{next}}"></p>
+        <p><a href="{% url 'password_reset'%}">▶︎パスワードを忘れた方はこちら</a></p>
+        <p><input type="submit" value="ログイン"></p>
     </form>
 </body>
 </html>  
