@@ -142,17 +142,17 @@ class Transaction(models.Model):
 		null=True,
 		verbose_name="報酬支払日付"
 	)
-	pay_courier_reward = models.DateTimeField(
+	pay_courier_reward = models.BooleanField(
 		blank=True,
 		null=True,
 		default=False,
 	)
-	pay_courier_item = models.DateTimeField(
+	pay_courier_item = models.BooleanField(
 		blank=True,
 		null=True,
 		default=False,
 	)
-	pay_fee = models.DateTimeField(
+	pay_fee = models.BooleanField(
 		blank=True,
 		null=True,
 		default=False,
