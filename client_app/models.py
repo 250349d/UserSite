@@ -14,11 +14,11 @@ def get_sentinel_user():
 		first_name = "None",
 		last_name = "None",
 		birthdate = '2000-01-01',
-		post_code = "None",
+		post_code = "0000000",
 		address = "None",
 		street_address = "None",
 		email = "none@example.com",
-		telephone_number = "None"
+		telephone_number = "00000000000"
 	)[0]
 
 # Create your models here.
