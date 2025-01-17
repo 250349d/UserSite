@@ -14,7 +14,7 @@ def get_sentinel_user():
     return CustomUser.objects.get_or_create(
             first_name = "None",
             last_name = "None",
-            birthdate = '0001-01-01',
+            birthdate = '2000-01-01',
             post_code = "None",
             address = "None",
             street_address = "None",
