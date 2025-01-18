@@ -13,12 +13,12 @@ def get_sentinel_user():
 	return CustomUser.objects.get_or_create(
 		first_name = "None",
 		last_name = "None",
-		birthdate = '2000-01-01',
-		post_code = "0000000",
+		birthdate = '0000-00-00',
+		post_code = "None",
 		address = "None",
 		street_address = "None",
 		email = "none@example.com",
-		telephone_number = "00000000000"
+		telephone_number = "None"
 	)[0]
 
 # Create your models here.
@@ -28,8 +28,6 @@ class Task(models.Model):
 		CustomUser,
 		on_delete=models.SET(get_sentinel_user),
 		related_name='client',
-		null=True, # TODO:仮でnullを許可する
-		blank=True, # TODO: 仮でblankを許可する
 		verbose_name="クライアント",
 	)
 	worker = models.ForeignKey(
@@ -57,7 +55,7 @@ class Task(models.Model):
 		verbose_name="配達ステータス",
 		help_text="0: 注文済み, 1: 配達中, 2: 承認待ち, 3: 再申請待ち, 4: 配達完了",
 	)
-	# TODO: 配達完了時間を設定する(いつ設定する？)
+
 	delivery_completion_time = models.DateTimeField(
 		blank=True,
 		null=True,
@@ -114,7 +112,7 @@ class Transaction(models.Model):
 	total_cost = models.IntegerField(
 		blank=True,
 		null=True,
-		verbose_name="合計金額"
+		verbose_name="商品合計金額"
 	)
 	courier_reward_amount = models.IntegerField(
 		blank=True,
@@ -135,7 +133,6 @@ class Transaction(models.Model):
 		blank=True,
 		null=True,
 		verbose_name="商品代金支払い日付"
-		# TODO: これなに？
 	)
 	courier_reward_date = models.DateTimeField(
 		blank=True,
@@ -159,7 +156,7 @@ class Transaction(models.Model):
 	)
 
 	def __str__(self):
-		return f"Transaction {self.id} - Total Cost: {self.total_cost}"
+		return f"Transaction {self.task} - Total Cost: {self.total_cost}"
 
 # Order model
 class Order(models.Model):

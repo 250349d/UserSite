@@ -14,12 +14,12 @@ def get_sentinel_user():
     return CustomUser.objects.get_or_create(
             first_name = "None",
             last_name = "None",
-            birthdate = '2000-01-01',
-            post_code = "0000000",
+            birthdate = '0001-01-01',
+            post_code = "None",
             address = "None",
             street_address = "None",
             email = "none@example.com",
-            telephone_number = "00000000000"
+            telephone_number = "None"
     )[0]
 
 class Contact(models.Model):

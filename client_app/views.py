@@ -7,12 +7,14 @@ from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 from .models import Task, Transaction, Order, Request
 
 logger = logging.getLogger('django')
 
 # 注文機能
+@login_required
 def create_order(request):
 	if request.method == 'POST':
 		is_success = False
@@ -30,7 +32,7 @@ def create_order(request):
 
 			task = Task(
 				# 依頼情報
-				client=None, #TODO: ログインユーザーを設定するようにする
+				client=request.user,
 				worker=None,
 				title=title,
 				limit_of_time=limit_of_time,
@@ -43,15 +45,13 @@ def create_order(request):
 			task.full_clean()
 			task.save()
 
-			# 取引情報を作成
-			transaction = Transaction(task=task)
-			transaction.save()
-
 			# 注文内容の取得
 			product_name_list = data.get('product_name_list')
 			price_list = data.get('price_list')
 			quantity_list = data.get('quantity_list')
 			notes_list = data.get('notes_list')
+
+			total_cost = 0 # 商品合計金額
 
 			order_list = zip(product_name_list, price_list, quantity_list, notes_list)
 			for product_name, price, quantity, notes in order_list:
@@ -64,6 +64,12 @@ def create_order(request):
 				)
 				order.full_clean()
 				order.save()
+
+				total_cost += int(price) * int(quantity) # 商品合計金額を計算
+
+			# 取引情報を作成・更新
+			Transaction.objects.create(task=task)
+			summarize_financials(task, total_cost)
 
 			is_success = True
 		except ValidationError as e:
@@ -83,17 +89,22 @@ def create_order(request):
 		return render(request, 'client_app/create_order.html')
 
 # 注文確認機能
+@login_required
 def check_order(request):
-	# 支払い済みでない注文を取得
-	unpaid_transactions = Transaction.objects.filter(payment_fee_date__isnull=True)
-	tasks = []
-	for transaction in unpaid_transactions:
-		tasks.append(transaction.task)
+	tasks = Task.objects.filter(
+		client=request.user, # 注文者がログインユーザー
+		transaction__payment_fee_date__isnull=True # 支払い済みでない
+	)
 	return render(request, 'client_app/check_order.html', {'tasks': tasks})
 
 # 注文詳細確認機能
+@login_required
 def check_order_detail(request, task_id):
 	task = get_object_or_404(Task, pk=task_id)
+	# 注文者がログインユーザーでない場合はリダイレクト
+	if task.client != request.user:
+		return redirect('client_app:check-order')
+
 	orders = Order.objects.filter(task=task)
 	# 小計を計算
 	for order in orders:
@@ -101,12 +112,17 @@ def check_order_detail(request, task_id):
 	return render(request, 'client_app/order_detail.html', {'task': task, 'orders': orders})
 
 # 注文キャンセル機能
+@login_required
 def cancel_order(request, task_id):
 	if request.method == 'POST':
 		is_success = False
 		error_message = "エラーが発生しました"
 		try:
 			task = Task.objects.get(pk=task_id)
+			# 注文者がログインユーザーでない場合はエラー処理
+			if task.client != request.user:
+				error_message = "注文者がログインユーザーではありません"
+				raise Exception(error_message)
 
 			# キャンセル可能かチェック
 			if task.status not in ['0']:
@@ -124,12 +140,17 @@ def cancel_order(request, task_id):
 		return redirect('client_app:check-order')
 
 # 申請確認機能
+@login_required
 def confirm_request(request, task_id):
 	if request.method == 'POST':
 		is_success = False
 		error_message = "エラーが発生しました"
 		try:
 			task = Task.objects.get(pk=task_id)
+			# 注文者がログインユーザーでない場合はエラー処理
+			if task.client != request.user:
+				error_message = "注文者がログインユーザーではありません"
+				raise Exception(error_message)
 
 			# 最新の申請情報を取得
 			try:
@@ -160,6 +181,7 @@ def confirm_request(request, task_id):
 		return redirect('client_app:check-order')
 
 # 申請承認機能
+@login_required
 def accept_request(request):
 	if request.method == 'POST':
 		is_success = False
@@ -170,11 +192,18 @@ def accept_request(request):
 			request_id = data.get('request_id')
 			request = Request.objects.get(pk=request_id)
 
+			task = request.task
+			# 注文者がログインユーザーでない場合はエラー処理
+			if task.client != request.user:
+				error_message = "注文者がログインユーザーではありません"
+				raise Exception(error_message)
+
 			# 申請情報のステータスを承認に変更
 			request.status = '1'
 			request.save()
 
-			summarize_financials(request.task.id, request.price)
+			# 申請金額による取引情報の更新
+			summarize_financials(request.task, request.price)
 
 			is_success = True
 		except Exception as e:
@@ -187,27 +216,22 @@ def accept_request(request):
 	else:
 		return redirect('client_app:check-order')
 
-# 注文料金・配達員の給料などの計算
-def summarize_financials(task_id, accepted_price):
+# 注文料金・配達員の給料などを商品合計金額をもとに計算
+def summarize_financials(task, total_cost):
 	try:
-		task = Task.objects.get(pk=task_id)
-
 		order_fee_rate = 0.25 # 注文手数料率
-		order_fee = accepted_price * order_fee_rate # 注文手数料
+		order_fee = total_cost * order_fee_rate # 注文手数料
 
 		delivery_fee = 300 # 配達手数料
 
 		total_fee = order_fee + delivery_fee # 基本合計手数料
 
 		# オプション料金の計算
-		if accepted_price >= 2000:
+		if total_cost >= 2000:
 			# 2000円以上の場合、1000円超過ごとに100円追加
-			total_fee += (accepted_price - 2000) // 1000 * 100
+			total_fee += (total_cost - 2000) // 1000 * 100
 
 		# TODO: 時間帯はどのタイミングを取得するのか
-
-		# 注文料金
-		total_cost = accepted_price + total_fee
 
 		# 配達員の給料
 		courier_reward_rate = 0.3 # 配達員報酬率
@@ -218,11 +242,13 @@ def summarize_financials(task_id, accepted_price):
 		transaction.total_cost = total_cost
 		transaction.courier_reward_amount = courier_reward
 		transaction.delivery_fee = total_fee
-
+		transaction.full_clean()
 		transaction.save()
 	except Exception as e:
 		raise e
 
+# 申請非承認機能
+@login_required
 def reject_request(request):
 	if request.method == 'POST':
 		is_success = False
@@ -232,6 +258,12 @@ def reject_request(request):
 
 			request_id = data.get('request_id')
 			request = Request.objects.get(pk=request_id)
+
+			task = request.task
+			# 注文者がログインユーザーでない場合はエラー処理
+			if task.client != request.user:
+				error_message = "注文者がログインユーザーではありません"
+				raise Exception(error_message)
 
 			# 申請情報のステータスを非承認に変更
 			request.status = '2'
@@ -255,16 +287,17 @@ def reject_request(request):
 		return redirect('client_app:check-order')
 
 # 完了済み依頼確認機能
+@login_required
 def check_completed_order(request):
-	# 支払い済みの注文を取得
-	paid_transactions = Transaction.objects.filter(payment_fee_date__isnull=False)
-	tasks = []
-	for transaction in paid_transactions:
-		tasks.append(transaction.task)
+	tasks = Task.objects.filter(
+		client=request.user, # 注文者がログインユーザー
+		transaction__payment_fee_date__isnull=False # 支払い済み
+	)
 	return render(request, 'client_app/check_completed_order.html', {'tasks': tasks})
 
 
-# 支払い機能
+# 支払い金額確認機能
+@login_required
 def check_payment(request):
 	if request.method == 'POST':
 		is_success = False
@@ -274,6 +307,10 @@ def check_payment(request):
 
 			task_id = data.get('task_id')
 			task = Task.objects.get(pk=task_id)
+			# 注文者がログインユーザーでない場合はエラー処理
+			if task.client != request.user:
+				error_message = "注文者がログインユーザーではありません"
+				raise Exception(error_message)
 
 			transaction = Transaction.objects.get(task=task)
 
@@ -289,14 +326,15 @@ def check_payment(request):
 				'error_message': error_message
 			})
 	else:
-		# 支払い済みではないかつ注文ステータスが完了済みの注文を取得
-		unpaid_transactions = Transaction.objects.filter(payment_fee_date__isnull=True, task__status='4')
-		payment_tasks = []
-		for transaction in unpaid_transactions:
-			payment_tasks.append(transaction.task)
-
+		payment_tasks = Task.objects.filter(
+			client=request.user, # 注文者がログインユーザー
+			transaction__payment_fee_date__isnull=True, # 支払い済みでない
+			status='4' # 注文ステータスが完了済み
+		)
 		return render(request, 'client_app/check_payment.html', {'tasks': payment_tasks})
 
+# 支払い機能
+@login_required
 def payment(request, task_id):
 	if request.method == 'POST':
 		is_success = False
@@ -306,6 +344,10 @@ def payment(request, task_id):
 
 			task_id = data.get('task_id')
 			task = Task.objects.get(pk=task_id)
+			# 注文者がログインユーザーでない場合はエラー処理
+			if task.client != request.user:
+				error_message = "注文者がログインユーザーではありません"
+				raise Exception(error_message)
 
 			name = data.get('name')
 			card_number = data.get('card_number')
@@ -352,6 +394,10 @@ def payment(request, task_id):
 		finally:
 			return JsonResponse({'success': is_success, 'error_message': error_message})
 	else:
-		transaction = get_object_or_404(Transaction, task_id=task_id)
-		total_cost = transaction.total_cost or 0
+		# 支払い方法入力画面の表示
+		task = get_object_or_404(Task, pk=task_id)
+		# 注文者がログインユーザーでない場合はリダイレクト
+		if task.client != request.user:
+			return redirect('client_app:check-order')
+		total_cost = task.transaction.total_cost or 0
 		return render(request, 'client_app/payment.html', {'task_id': task_id, 'total_cost': total_cost})

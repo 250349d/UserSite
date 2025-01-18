@@ -6,15 +6,14 @@
     <title>mypage</title>
 </head>
 <body>
-    <p><a href="/client/create-order/">注文を行う</a></p>
-    <p><a href="/client/check-order/">注文確認</a></p>
-    <p><a href="/client/check-completed-order/">完了済み依頼確認</a></p>
-    <p><a href="/client/check-payment/">支払い</a></p>
-    <p><a href="/send-contact/">お問い合わせ</a></p>
-    <p><a href="/notification-info/">お知らせ情報一覧</a></p>
-    <p><a href="/login-app/logout/">ログアウト</a></p>
-    <p><a href="/userdelete/">退会</a></p>
+    <p><a href="{% url 'client_app:create-order' %}">注文を行う</a></p>
+    <p><a href="{% url 'client_app:check-order' %}">注文確認</a></p>
+    <p><a href="{% url 'client_app:check-completed-order' %}">完了済み依頼確認</a></p>
+    <p><a href="{% url 'client_app:check-payment' %}">支払い</a></p>
+    <p><a href="{% url 'send_contact_app:send_contact' %}">お問い合わせ</a></p>
+    <p><a href="{% url 'notification_app:list' %}">お知らせ情報一覧</a></p>
+    <p><a href="{% url 'login_app:logout' %}">ログアウト</a></p>
+    <p><a href="{% url 'userdelete_app:userdelete' %}">退会</a></p>
     <p><a href="{% url 'worker_app:mypage' %}">配達員用ページへ</a></p>
 </body>
-
 </html>

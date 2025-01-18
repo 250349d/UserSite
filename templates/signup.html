@@ -1,0 +1,21 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'login_app/css/sample.css' %}" rel ="stylesheet">
+    <title>ユーザー登録</title>
+</head>
+<body>
+    <div class="logo">
+        <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}"  width="246" height="82"> 
+    </div>
+    <form action="{% url 'signup' %}" method="post">
+        <h2 class="signup_user">ユーザー登録</h2>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p><input type="submit" value="登録"></p>
+    </form>
+</body>
+</html>  

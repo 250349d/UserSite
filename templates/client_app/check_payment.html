@@ -13,17 +13,22 @@
 	<script src="{% static 'client_app/js/check_payment.js' %}"></script>
 </head>
 <body>
-	{% for task in tasks %}
-		<div class="order-container">
-			<span>{{ task.title }}>></span>
-			<a href="{% url 'client_app:check-payment-detail' task.id %}">注文詳細</a>
+	{% if tasks %}
+		{% for task in tasks %}
+			<div class="order-container">
+				<span>{{ task.title }}>></span>
+				<a href="{% url 'client_app:check-payment-detail' task.id %}">注文詳細</a>
 
+				<br>
+
+				<button type="button" onclick="showCost('{{ task.id }}')">お支払いへ進む</button>
+			</div>
+			<div>注文日 {{ task.created_at }}</div>
 			<br>
-
-			<button type="button" onclick="showCost('{{ task.id }}')">お支払いへ進む</button>
-		</div>
-		<div>注文日 {{ task.created_at }}</div>
-		<br>
-	{% endfor %}
+		{% endfor %}
+	{% else %}
+		<h1>お支払いできる注文がありません</h1>
+	{% endif %}
+	<button type="button" onclick="history.back()">戻る</button>
 </body>
 </html>
