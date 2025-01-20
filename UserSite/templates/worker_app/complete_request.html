@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>依頼完了</title>
+</head>
+<body>
+    <h1>依頼完了</h1>
+    <p>以下の依頼を完了しますか？</p>
+    <p><strong>タイトル:</strong> {{ request.title }}</p>
+    <p><strong>詳細:</strong> {{ request.description }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">完了する</button>
+    </form>
+    <a href="{% url 'worker_app:mypage' %}">戻る</a>
+</body>
+</html>

@@ -1,36 +1,36 @@
-{% extends 'worker_app/base.html' %}
-
-{% block title %}マイページ - ふらっとさ{% endblock %}
+{% extends "worker_app/base.html" %}
+{% load static %}
 
 {% block content %}
-    {% load static %}
-    <link href="{% static 'css/worker_app.css' %}" rel="stylesheet">
+<div class="mypage">
     <div class="nav">
-        <!-- ハンバーガーメニューの表示・非表示を切り替えるチェックボックス -->
         <input id="drawer_input" class="drawer_hidden" type="checkbox">
-    
-        <!-- ハンバーガーアイコン -->
         <label for="drawer_input" class="drawer_open"><span></span></label>
-        
-        <!-- メニュー -->
         <nav class="nav_content">
+            <div class="menu_logo">
+                <img src="{% static 'login_app/images/furattosalogo.png' %}" alt="Furattosa Logo">
+            </div>
             <div class="nav_list">
-                <div class="logo">
-                    <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}" alt="ふらっとさロゴ" width="246" height="82">
-                </div>
                 <p><a href="{% url 'login_app:logout' %}">ログアウト</a></p>
                 <p><a href="{% url 'userdelete_app:userdelete' %}">退会</a></p>
                 <p><a href="{% url 'send_contact_app:send_contact' %}">お問い合わせ</a></p>
                 <p><a href="{% url 'notification_app:list' %}">お知らせ</a></p>
-                <p><a href="{% url 'client_app:mypage' %}">注文者用ページへ</a></p>
+                <p><a href="{% url 'client_app:mypage' %}">注文者ページ</a></p>
             </div>
         </nav>
     </div>
 
-    <div class="mypage">
-        <p><input type="button" class="create_order" value="受注ページ" onclick="location.href='{% url 'worker_app:receive_request' %}'"></p>
-        <p><input type="button" class="check_order" value="受注済み依頼一覧" onclick="location.href='{% url 'worker_app:accepted_requests' %}'"></p>
-        <p><input type="button" class="check_completed" value="完了済み依頼一覧" onclick="location.href='{% url 'worker_app:completed_requests' %}'"></p>
-        <p><input type="button" class="check_payment" value="報酬確認" onclick="location.href='{% url 'worker_app:reward_check' %}'"></p>
+    <div class="content-container">
+        <div class="logo">
+            <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}" width="246" height="82">
+        </div>
+
+        <div class="button-container">
+            <a href="{% url 'worker_app:receive_request' %}" class="create_order">配達依頼を受ける</a>
+            <a href="{% url 'worker_app:accepted_requests' %}" class="check_order">受けた配達依頼を確認</a>
+            <a href="{% url 'worker_app:completed_requests' %}" class="check_completed">完了した配達依頼を確認</a>
+            <a href="{% url 'worker_app:reward_check' %}" class="check_payment">報酬を確認</a>
+        </div>
     </div>
+</div>
 {% endblock %}

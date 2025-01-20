@@ -1,19 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>依頼キャンセル</title>
-</head>
-<body>
+{% extends 'worker_app/base.html' %}
+{% load static %}
+
+{% block title %}依頼キャンセル - ふらっとさ{% endblock %}
+
+{% block content %}
+<div class="cancel-request">
     <h1>依頼キャンセル</h1>
-    <p>以下の依頼をキャンセルしますか？</p>
-    <p><strong>タイトル:</strong> {{ task.title }}</p>
-    <!--<p><strong>詳細:</strong> {{ task.description }}</p>-->
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">キャンセルする</button>
-    </form>
-    <a href="{% url 'worker_app:mypage' %}">戻る</a>
-</body>
-</html>
+    
+    <div class="cancel-card">
+        <div class="warning-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        
+        <h2>依頼をキャンセルしてもよろしいですか？</h2>
+        
+        <div class="task-details">
+            <div class="detail-item">
+                <strong>タイトル:</strong>
+                <span>{{ task.title }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <strong>店舗名:</strong>
+                <span>{{ task.shop_name }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <strong>配達期限:</strong>
+                <span>{{ task.limit_of_time|date:"Y/m/d H:i" }}</span>
+            </div>
+            
+            {% if task.transaction %}
+            <div class="detail-item">
+                <strong>商品合計:</strong>
+                <span>{{ task.transaction.total_cost }}円</span>
+            </div>
+            <div class="detail-item">
+                <strong>配達料:</strong>
+                <span>{{ task.transaction.delivery_fee }}円</span>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="cancel-warning">
+            <p>注意: キャンセルすると、この依頼は完全に削除され、報酬も失われます。</p>
+        </div>
+        
+        <form method="post" class="cancel-form">
+            {% csrf_token %}
+            <div class="form-actions">
+                <a href="{% url 'worker_app:accepted_requests' %}" class="btn btn-secondary">戻る</a>
+                <button type="submit" class="btn btn-danger">キャンセルする</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+{% endblock %}
