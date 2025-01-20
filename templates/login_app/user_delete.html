@@ -5,14 +5,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{% static 'css/sample.css' %}" rel ="stylesheet">
-    <title>ログアウト</title>
+    <title>退会</title>
 </head>
 <body>
     <div class="logo">
         <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}"  width="246" height="82"> 
         {% comment %} width="984" height="329" {% endcomment %}
     
-    <h2>ログアウトしました...</h2>
+    <h2>退会しました...</h2>
     {% comment %} <p><a href="{% url 'login' %}">ログイン</a></p>
     <p><a href="{% url 'signup' %}">新規会員登録</a></p> {% endcomment %}
     <p><input type="submit" class="home_login" value="ログイン" onclick="location.href='{% url 'login_app:login' %}'"></p>

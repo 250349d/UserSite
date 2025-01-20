@@ -3,11 +3,22 @@
 <html lang="ja">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/sample.css' %}" rel ="stylesheet">
     <title>mypage</title>
 </head>
 <body>
-    <p><a href="{% url 'login_app:login' %}">ログイン</a></p>
-    <p><a href="{% url 'signup_app:signup' %}">新規会員登録</a></p>
+    <div class="logo_home">
+        <img class="furattosalogo_home" src="{% static 'login_app/images/furattosalogo.png' %}"  width="246" height="82"> 
+        {% comment %} width="984" height="329" {% endcomment %}
+    <p><input type="submit" class="home_login" value="ログイン" onclick="location.href='{% url 'login_app:login' %}'"></p>
+    <p><input type="submit" class="home_signup" value="新規会員登録" onclick="location.href='{% url 'signup_app:signup' %}'"></p>
+    {% comment %} <p><input type="submit" class="home_terms_of_service" value="利用規約" onclick="location.href='{% url 'terms_of_service' %}'"></p>
+    <p><input type="submit" class="home_about_site" value="このサイトについて" onclick="location.href='{% url 'about_this_site' %}'"></p>     {% endcomment %}
+    <button class="home_terms_of_use" type="button">利用規約</button>
+    <button class="home_about_site" type="button">このサイトについて</button>
+
+    </div>
 </body>
 
 </html>

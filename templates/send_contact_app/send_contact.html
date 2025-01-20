@@ -1,17 +1,28 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/sample.css' %}" rel ="stylesheet">
     <title>お問い合わせ</title>
 </head>
 <body>
-    <h1>お問い合わせフォーム</h1>
+    <div class="logo">
+        <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}"  width="246" height="82"> 
+    </div>
+    <div class="send_contact">
+    <h2>お問い合わせフォーム</h2>
+    </div>
     {% if error %}
         <p style="color: red;">{{ error }}</p>
     {% endif %}
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">送信</button>
+        <input type="submit" class="transmission" value="送信"></input>
+        <button type="button" class="return" onclick="history.back()">戻る</button>
     </form>
+
 </body>
 </html>

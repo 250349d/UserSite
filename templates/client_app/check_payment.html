@@ -5,6 +5,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>ふらっとさ</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/sample.css' %}" rel ="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 	<script>
 		const checkPaymentUrl= "{% url 'client_app:check-payment' %}";
@@ -13,6 +15,9 @@
 	<script src="{% static 'client_app/js/check_payment.js' %}"></script>
 </head>
 <body>
+	<div class="logo">
+        <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}"  width="246" height="82"> 
+    </div>
 	{% if tasks %}
 		{% for task in tasks %}
 			<div class="order-container">
@@ -29,6 +34,6 @@
 	{% else %}
 		<h1>お支払いできる注文がありません</h1>
 	{% endif %}
-	<button type="button" onclick="history.back()">戻る</button>
+	<button type="button" class="return" onclick="history.back()">戻る</button>
 </body>
 </html>

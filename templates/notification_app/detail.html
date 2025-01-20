@@ -3,10 +3,16 @@
 <html lang="ja">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/sample.css' %}" rel ="stylesheet">
     <title>お知らせ詳細情報</title>
 </head>
 <body>
-    <h1>お知らせ詳細情報</h1>
+  <div class="logo">
+    <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}"  width="246" height="82"> 
+</div>
+<form>
+    <h2>お知らせ詳細情報</h2>
       {% for object in objects %}
       {{ object.title }}
       {{ object.text }}
@@ -14,6 +20,7 @@
       {% endfor %}
   </table>
   <p><a href="{% url 'notification_app:list' %}">戻る</a></p>
+</form>
 </body>
 
 </html>

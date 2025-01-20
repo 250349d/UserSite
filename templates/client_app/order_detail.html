@@ -4,22 +4,29 @@
 <head>
 	<meta charset="UTF-8">
 	<title>ふらっとさ</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/sample.css' %}" rel ="stylesheet">
 </head>
 <body>
+	<div class="logo">
+        <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}"  width="246" height="82"> 
+    </div>
+	<form>
 	<h1>注文詳細</h1>
 
 	<div>
-		<span>件名</span>
+		<span>件名：</span>
 		<span>{{ task.title }}</span>
 	</div>
 
 	<div class="order-container">
 		<h2>注文内容</h2>
 		<div class="address-container">
-			<p>届け先住所</p>
+			<p class="order_address">届け先住所</p>
 			<p>〒{{ task.shop_post_code }}</p>
 			<p>高知県香美市土佐山田町{{ task.shop_address }}{{task.shop_street_address}}</p>
 		</div>
+	</form>
 		<table id="products-table" class="products-table">
 			<thead>
 				<tr>
@@ -42,6 +49,6 @@
 				{% endfor %}
 			</tbody>
 		</table>
-		<button type="button" onclick="history.back()">戻る</button>
+		<button type="button" class="return" onclick="history.back()">戻る</button>
 </body>
 </html>
