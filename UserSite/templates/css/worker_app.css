@@ -1,0 +1,92 @@
+/* client_appのスタイルを継承 */
+@import url('sample.css');
+
+/* worker_app用のカラーオーバーライド */
+/* メインカラー: #FF6B6B (暖かみのある赤) */
+/* アクセントカラー: #4ECDC4 (ミントグリーン) */
+
+/* ハンバーガーメニュー */
+.drawer_open span,
+.drawer_open span:before,
+.drawer_open span:after {
+    background-color: #FF6B6B;
+}
+
+/* メニューリンク */
+.nav_list p a {
+    color: #FF6B6B;
+}
+
+.nav_list p a:hover {
+    color: #4ECDC4;
+}
+
+/* ボタンスタイル */
+.create_order,
+.check_order,
+.check_completed,
+.check_payment {
+    border: solid 2px #FF6B6B;
+    color: #FF6B6B;
+}
+
+.create_order:hover,
+.check_order:hover,
+.check_completed:hover,
+.check_payment:hover {
+    background-color: #FF6B6B;
+    color: #fff;
+}
+
+/* メッセージとステータス */
+.message.success {
+    background-color: #4ECDC4;
+}
+
+.message.error {
+    background-color: #FF6B6B;
+}
+
+/* ステータスバッジ */
+.status-badge {
+    background-color: #4ECDC4;
+}
+
+/* フォーム要素 */
+input[type="text"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    border-color: #FF6B6B;
+    box-shadow: 0 0 5px rgba(255, 107, 107, 0.3);
+}
+
+/* リンク */
+a {
+    color: #FF6B6B;
+}
+
+a:hover {
+    color: #4ECDC4;
+}
+
+/* ヘッダー要素 */
+h1, h2, h3 {
+    color: #FF6B6B;
+}
+
+/* テーブル */
+th {
+    background-color: #FF6B6B;
+    color: white;
+}
+
+/* ボーダー */
+.menu-section {
+    border-color: #FF6B6B;
+}
+
+/* アクティブ状態 */
+.active {
+    background-color: #FF6B6B;
+    color: white;
+}
