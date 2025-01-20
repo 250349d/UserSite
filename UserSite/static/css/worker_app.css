@@ -1,0 +1,376 @@
+/* worker_app用のカラーオーバーライド */
+/* メインカラー: #6B4EE6 (深い紫) */
+/* アクセントカラー: #9B7EFF (明るい紫) */
+/* 補助カラー: #E6E0FF (薄い紫) */
+
+/* 共通スタイル */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+h1, h2, h3 {
+    color: #6B4EE6;
+    margin-bottom: 1rem;
+}
+
+/* リクエストリスト */
+.request-list {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.request-item {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #6B4EE6;
+}
+
+.request-item h2 {
+    margin-top: 0;
+    color: #6B4EE6;
+}
+
+.request-item p {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+/* ボタン */
+.btn-primary {
+    background-color: #6B4EE6;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #9B7EFF;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid #6B4EE6;
+    color: #6B4EE6;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background-color: #6B4EE6;
+    color: white;
+}
+
+/* アクションボタン */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* ステータスバッジ */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-completed {
+    background-color: #E6E0FF;
+    color: #6B4EE6;
+}
+
+/* 報酬確認ページ */
+.reward-check {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.reward-summary {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.total-reward {
+    font-size: 2rem;
+    color: #6B4EE6;
+    font-weight: bold;
+}
+
+.reward-item {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ナビゲーションボタン */
+.navigation-buttons {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+/* テーブル */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+th {
+    background-color: #6B4EE6;
+    color: white;
+    padding: 1rem;
+    text-align: left;
+}
+
+td {
+    padding: 1rem;
+    border-top: 1px solid #E6E0FF;
+}
+
+/* メッセージ */
+.no-items {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    color: #666;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 480px) {
+    .request-item {
+        padding: 1rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-outline {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+/* ホームページ */
+.logo_home{
+    text-align:center;
+}
+
+.furattosalogo_home{
+    width:100%;
+    height:auto;
+}
+
+.homepage {
+    text-align:center;
+} 
+
+/* ハンバーガーメニュー */
+.drawer_open span,
+.drawer_open span:before,
+.drawer_open span:after {
+    background-color: #6B4EE6;
+}
+
+/* メニューリンク */
+.nav_list p a {
+    color: #6B4EE6;
+}
+
+.nav_list p a:hover {
+    color: #9B7EFF;
+}
+
+/* 共通*/
+.logo{
+    text-align:center;
+} 
+
+.furattosalogo{
+    width:60%;
+    height:auto;
+}   
+
+form {
+    text-align:center;
+    max-width: 100%;
+    margin: 50px auto;
+    padding: 20px;
+} 
+
+/* ボタンスタイル */
+.create_order,
+.check_order,
+.check_completed,
+.check_payment {
+    width:50%;
+    margin-top: 50px;
+    background-color: #fff;
+    border: solid 2px #6B4EE6;
+    color: #6B4EE6;
+    border-radius: 10px;
+    padding: 8px 13px;
+    text-decoration: none;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.create_order:hover,
+.check_order:hover,
+.check_completed:hover,
+.check_payment:hover {
+    color: #fff;
+    background-color: #6B4EE6;
+    box-shadow: 0 2px 8px rgba(107, 78, 230, 0.3);
+}
+
+/* メッセージとステータス */
+.message.success {
+    background-color: #9B7EFF;
+    color: white;
+}
+
+.message.error {
+    background-color: #FF6B6B;
+}
+
+/* フォーム要素 */
+input[type="text"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    border-color: #6B4EE6;
+    box-shadow: 0 0 5px rgba(107, 78, 230, 0.3);
+}
+
+/* リンク */
+a {
+    color: #6B4EE6;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #9B7EFF;
+}
+
+/* ヘッダー要素 */
+h1, h2, h3 {
+    color: #6B4EE6;
+}
+
+/* テーブル */
+th {
+    background-color: #6B4EE6;
+    color: white;
+}
+
+/* マイページ */
+.mypage {
+    text-align: center;
+    margin-top: 20px;
+    background-color: #fff;
+}
+
+/* ナビゲーションコンテンツ */
+.nav_content {
+    background-color: #E6E0FF;
+}
+
+.nav_list {
+    background-color: #fff;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 480px) {
+    .create_order,
+    .check_order,
+    .check_completed,
+    .check_payment {
+        width: 80%;
+        font-size: 16px;
+    }
+    
+    .nav_list p a {
+        padding: 12px 15px;
+        display: block;
+        border-bottom: 1px solid #E6E0FF;
+    }
+    
+    .nav_list p a:hover {
+        background-color: #E6E0FF;
+    }
+}
+
+/* フォーム */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #6B4EE6;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #E6E0FF;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #6B4EE6;
+    box-shadow: 0 0 0 3px rgba(107, 78, 230, 0.1);
+}
+
+/* 費用入力フォーム */
+.submit-cost {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.cost-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+}
