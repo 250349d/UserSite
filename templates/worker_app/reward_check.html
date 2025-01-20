@@ -1,60 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>報酬確認</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
+{% extends 'worker_app/base.html' %}
+{% load static %}
+
+{% block title %}報酬確認 - ふらっとさ{% endblock %}
+
+{% block content %}
+<div class="reward-check">
     <h1>報酬確認</h1>
     
-    <div>
-        <h2>報酬実績</h2>
-        <p>完了した依頼数: {{ completed_count }}件</p>
-        <p>合計報酬: {{ total_reward }}円</p>
+    <div class="reward-summary">
+        <h2>総報酬額</h2>
+        <p class="total-reward">{{ total_reward }}円</p>
     </div>
 
-    <h2>完了済みの依頼一覧</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>タイトル</th>
-                <th>配達費用</th>
-                <th>報酬（25%）</th>
-                <th>依頼者</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for request in requests %}
-                <tr>
-                    <td>{{ request.title }}</td>
-                    <td>{% if request.cost %}{{ request.cost.amount }}円{% else %}未設定{% endif %}</td>
-                    <td>{% if request.cost %}{{ request.cost.reward }}円{% else %}0円{% endif %}</td>
-                    <td>{{ request.created_by.username }}</td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="4">完了済みの依頼はありません。</td>
-                </tr>
+    <div class="reward-list">
+        <h2>報酬詳細</h2>
+        {% if rewards %}
+            {% for reward in rewards %}
+                <div class="reward-item">
+                    <h3>{{ reward.request.title }}</h3>
+                    <p>完了日時: {{ reward.completed_at|date:"Y/m/d H:i" }}</p>
+                    <p>報酬額: {{ reward.amount }}円</p>
+                    <p class="status-badge">{{ reward.status }}</p>
+                </div>
             {% endfor %}
-        </tbody>
-    </table>
-
-    <div style="margin-top: 20px;">
-        <a href="{% url 'worker_app:mypage' %}">ホームに戻る</a>
+        {% else %}
+            <p class="no-items">報酬履歴はありません。</p>
+        {% endif %}
     </div>
-</body>
-</html>
+    
+    <div class="navigation-buttons">
+        <a href="{% url 'worker_app:mypage' %}" class="btn-outline">マイページに戻る</a>
+    </div>
+</div>
+{% endblock %}

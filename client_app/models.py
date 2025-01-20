@@ -99,7 +99,7 @@ class Task(models.Model):
 		self.limit_of_time = limit_of_time
 
 	def __str__(self):
-		return self.title
+		return f"Task {self.id} - Title: {self.title}"
 
 # Transaction model
 class Transaction(models.Model):

@@ -1,9 +1,9 @@
-{% extends 'worker_app_temp/base.html' %}
+{% extends 'worker_app/base.html' %}
 {% load custom_filters %}
-
-{% block title %}受注済み依頼一覧{% endblock %}
+{% block title %}受注済み依頼一覧 - ふらっとさ{% endblock %}
 
 {% block content %}
+<div class="request-list">
     <h1>受注済み依頼一覧</h1>
     
     {% if not tasks %}
@@ -81,4 +81,5 @@
     {% endif %}
     
     <a href="{% url 'worker_app:mypage' %}" class="btn btn-secondary">ホームに戻る</a>
+</div>
 {% endblock %}

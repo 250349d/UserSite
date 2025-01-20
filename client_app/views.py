@@ -162,9 +162,15 @@ def confirm_request(request, task_id):
 				latest_request_id = None
 				latest_request_price = None
 
-			# 未承認の申請情報がない
-			if not latest_request or latest_request.status != '0':
+			# 申請状況のチェック
+			if not latest_request:
 				error_message = "未承認の申請情報がありません"
+				raise Exception(error_message)
+			elif latest_request.status == '1':
+				error_message = "既に承認済みです"
+				raise Exception(error_message)
+			elif latest_request.status == '2':
+				error_message = "既に非承認しています\n再申請をお待ちください"
 				raise Exception(error_message)
 
 			is_success = True
@@ -190,25 +196,25 @@ def accept_request(request):
 			data = json.loads(request.body)
 
 			request_id = data.get('request_id')
-			request = Request.objects.get(pk=request_id)
+			order_request = Request.objects.get(pk=request_id)
 
-			task = request.task
+			task = order_request.task
 			# 注文者がログインユーザーでない場合はエラー処理
 			if task.client != request.user:
 				error_message = "注文者がログインユーザーではありません"
 				raise Exception(error_message)
 
 			# 申請情報のステータスを承認に変更
-			request.status = '1'
-			request.save()
+			order_request.status = '1'
+			order_request.save()
 
 			# 申請金額による取引情報の更新
-			summarize_financials(request.task, request.price)
+			summarize_financials(task, order_request.price)
 
 			is_success = True
 		except Exception as e:
-			request.status = '0' # エラーが発生した場合は未承認に戻す
-			request.save()
+			order_request.status = '0' # エラーが発生した場合は未承認に戻す
+			order_request.save()
 
 			logger.error(e)
 		finally:
@@ -257,18 +263,18 @@ def reject_request(request):
 			data = json.loads(request.body)
 
 			request_id = data.get('request_id')
-			request = Request.objects.get(pk=request_id)
+			order_request = Request.objects.get(pk=request_id)
 
-			task = request.task
+			task = order_request.task
 			# 注文者がログインユーザーでない場合はエラー処理
 			if task.client != request.user:
 				error_message = "注文者がログインユーザーではありません"
 				raise Exception(error_message)
 
 			# 申請情報のステータスを非承認に変更
-			request.status = '2'
-			request.full_clean()
-			request.save()
+			order_request.status = '2'
+			order_request.full_clean()
+			order_request.save()
 
 			#非承認メールを送信
 			send_mail(
@@ -280,6 +286,9 @@ def reject_request(request):
 
 			is_success = True
 		except Exception as e:
+			order_request.status = '0' # エラーが発生した場合は未承認に戻す
+			order_request.save()
+
 			logger.error(e)
 		finally:
 			return JsonResponse({'success': is_success, 'error_message': error_message})

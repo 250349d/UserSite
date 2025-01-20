@@ -7,16 +7,19 @@ class Chat(models.Model):
 		Task,
 		on_delete=models.CASCADE,
 		related_name='chat',
-		null=True, # !!一時的にnullを許可
-		verbose_name="チャット"
+		verbose_name="チャット",
+		editable=False
 	)
 	sender_group = models.CharField(
 		max_length=1,
-		verbose_name="送信者の属性(0: 注文者, 1: 配達員)"
+		verbose_name="送信者の属性",
+		help_text="0: 注文者, 1: 配達員",
+		editable=False
 	)
 	send_time = models.DateTimeField(
 		auto_now_add=True,
-		verbose_name="メッセージ送信時間"
+		verbose_name="メッセージ送信時間",
+		editable=False
 	)
 	text = models.CharField(
 		max_length=150,
@@ -25,3 +28,6 @@ class Chat(models.Model):
 	read_flag = models.BooleanField(
 		default=False
 	)
+
+	def __str__(self):
+		return f"Chat {self.id} - Task: {self.task}"

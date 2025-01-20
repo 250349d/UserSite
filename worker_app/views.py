@@ -82,7 +82,7 @@ def submit_cost_view(request, pk):
     if request.method == 'POST':
         try:
             with transaction.atomic():
-                task.status = '1'  # Delivered
+                task.status = '2'  # Delivered
                 task.delivery_completion_time = timezone.now()
                 task.save()
 
@@ -91,9 +91,9 @@ def submit_cost_view(request, pk):
                     task=task,
                     time=timezone.now(),
                     price=task.transaction.total_cost,
-                    status='2'  # Pending approval
+                    status='0'  # Pending approval
                 )
-                return redirect('accepted_requests')
+                return redirect('worker_app:accepted_requests')
         except Exception as e:
             print(f"Error submitting completion: {e}")
             return HttpResponse("完了申請中にエラーが発生しました", status=500)
@@ -103,11 +103,11 @@ def submit_cost_view(request, pk):
 @login_required
 def cancel_request_view(request, pk):
     task = get_object_or_404(Task, pk=pk)
-    if task.status == '1' and task.worker == request.user.id: # 確認
+    if task.status == '1' and task.worker == request.user: # 確認
         if request.method == 'POST':
             task.status = 'C'  # Canceled
             task.save()
-            return redirect('requester_home')
+            return redirect('worker_app:mypage')
     return render(request, 'worker_app/cancel_request.html', {'task': task})
 
 @login_required

@@ -1,5 +1,6 @@
 from django.urls import path, include
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
 
 from . import views
 
@@ -7,7 +8,7 @@ app_name = 'client_app'
 urlpatterns = [
 	# 注文機能
 	path('create-order/', views.create_order, name='create-order'),
-	path('mypage/', TemplateView.as_view(template_name='client_app/mypage.html'), name='mypage'),
+	path('mypage/', login_required(TemplateView.as_view(template_name='client_app/mypage.html')), name='mypage'),
 
 	# 注文確認機能
 	path('check-order/', views.check_order, name='check-order'),
@@ -18,8 +19,6 @@ urlpatterns = [
 	path('check-order/confirm/<int:task_id>/', views.confirm_request, name='confirm-request'),
 	path('check-order/accept/', views.accept_request, name='accept-request'),
 	path('check-order/reject/', views.reject_request, name='reject-request'),
-
-	path('check-order/chat/', include('chat_app.urls')),
 
 	# 完了済み依頼確認機能
 	path('check-completed-order/', views.check_completed_order, name='check-completed-order'),

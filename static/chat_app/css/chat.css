@@ -1,51 +1,93 @@
+body {
+	margin: 0;
+	font-weight: bold;
+}
+
+/* チャット画面全体 */
+.chat-header {
+	text-align: left;
+	font-size: 3vh;
+	color: gray;
+	height: 5%;
+}
+
+.back-button {
+	text-decoration: none;
+	color: inherit;
+}
+
+.chat-container {
+	height: 95%;
+}
+
+/* メッセージ表示エリア */
 .message-container {
-	margin: 10px;
-	border: 2px solid #ccc;
-	border-radius: 4px;
-	background-color: skyblue;
-	height: 300px;
+	height: 90%;
 	overflow-y: scroll;
+	background-color: whitesmoke;
 }
 
+/* メッセージ */
 .message {
-	border-bottom: 1px dashed whitesmoke;
+	background-color: lightgreen;
+	border-radius: 10px;
+	margin: 10px 0;
+	width: fit-content;
 }
 
-.client-message {
+.left-message {
 	text-align: left;
 }
 
-.worker-message {
+.right-message {
 	text-align: right;
+	margin-left: auto;
 }
 
 .message-time {
-	font-size: 10px;
 	color: white;
 }
 
 .message-text {
-	font-size: 12px;
+	font-size: 20px;
 	margin-left: 2px;
 	margin-right: 2px;
 	color: black;
 }
 
 .message-read-flag {
-	font-size: 6px;
 	color: white;
 }
 
-
-.message-input-container {
-	width: 100%;
-	margin: 4px;
-}
-
-.message-input {
+/* 日付区切り */
+.date-divider {
+	margin: 10px 0;
+	text-align: center;
 	color: black;
 }
 
+/* メッセージ入力エリア */
+.message-input-container {
+	height: 10%;
+}
+
+/* メッセージ入力 */
+.message-input {
+	margin: 0;
+	width: 90%;
+	height: 100%;
+	color: black;
+	text-align: left;
+	vertical-align: top;
+}
+
+.message-input::placeholder {
+	font-size: 2em;
+}
+
+/* 送信ボタン */
 .message-send-button {
+	vertical-align: top;
+	margin: 0;
 	color: blue;
 }

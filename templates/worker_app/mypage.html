@@ -1,29 +1,36 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>マイページ</title>
-</head>
-<body>
-    <div style="text-align: right;">
-            <a href="{% url 'login_app:logout' %}">ログアウト</a>
-            <a href="{% url 'userdelete_app:userdelete' %}">退会</a>
-            <a href="{% url 'send_contact_app:send_contact' %}">お問い合わせ</a>
-            <a href="{% url 'notification_app:list' %}">お知らせ</a>
-            <a href="{% url 'client_app:mypage' %}">注文者用ページへ</a>
+{% extends "worker_app/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="mypage">
+    <div class="nav">
+        <input id="drawer_input" class="drawer_hidden" type="checkbox">
+        <label for="drawer_input" class="drawer_open"><span></span></label>
+        <nav class="nav_content">
+            <div class="menu_logo">
+                <img src="{% static 'login_app/images/furattosalogo.png' %}" alt="Furattosa Logo">
+            </div>
+            <div class="nav_list">
+                <p><a href="{% url 'login_app:logout' %}">ログアウト</a></p>
+                <p><a href="{% url 'userdelete_app:userdelete' %}">退会</a></p>
+                <p><a href="{% url 'send_contact_app:send_contact' %}">お問い合わせ</a></p>
+                <p><a href="{% url 'notification_app:list' %}">お知らせ</a></p>
+                <p><a href="{% url 'client_app:mypage' %}">注文者ページ</a></p>
+            </div>
+        </nav>
     </div>
 
-    <h1>マイページ</h1>
+    <div class="content-container">
+        <div class="logo">
+            <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}" width="246" height="82">
+        </div>
 
-    <div>
-        <h2>配送関連</h2>
-        <h3>配達員メニュー</h3>
-        <ul>
-            <li><a href="{% url 'worker_app:receive_request' %}">受注ページに移動</a></li>
-            <li><a href="{% url 'worker_app:accepted_requests' %}">受注済みの依頼一覧</a></li>
-            <li><a href="{% url 'worker_app:completed_requests' %}">完了済みの依頼一覧</a></li>
-            <li><a href="{% url 'worker_app:reward_check' %}">報酬確認</a></li>
-        </ul>
-
+        <div class="button-container">
+            <a href="{% url 'worker_app:receive_request' %}" class="create_order">配達依頼を受ける</a>
+            <a href="{% url 'worker_app:accepted_requests' %}" class="check_order">受けた配達依頼を確認</a>
+            <a href="{% url 'worker_app:completed_requests' %}" class="check_completed">完了した配達依頼を確認</a>
+            <a href="{% url 'worker_app:reward_check' %}" class="check_payment">報酬を確認</a>
+        </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
