@@ -1,0 +1,134 @@
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>依頼確認</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .request-details {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .shop-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .item-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .item-table th, .item-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .item-table th {
+            background-color: #f5f5f5;
+        }
+        .total-amount {
+            text-align: right;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        .delivery-fee {
+            color: #28a745;
+            margin-top: 5px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .deadline {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>依頼確認</h1>
+        
+        <div class="request-details">
+            <h2>依頼情報</h2>
+            <p><strong>依頼件名:</strong> {{ task.title }}</p>
+            <p class="deadline"><strong>配達期限:</strong> {{ task.limit_of_time|date:"Y/m/d H:i" }}</p>
+            
+            <div class="shop-info">
+                <h3>店舗情報</h3>
+                <p><strong>店舗名:</strong> {{ task.shop_name }}</p>
+                <p><strong>郵便番号:</strong> {{ task.shop_post_code }}</p>
+                <p><strong>住所:</strong> {{ task.shop_address }}</p>
+                <p><strong>番地:</strong> {{ task.shop_street_address }}</p>
+            </div>
+        </div>
+
+        <div class="items-section">
+            <h2>商品情報</h2>
+            <table class="item-table">
+                <thead>
+                    <tr>
+                        <th>商品名</th>
+                        <th>数量</th>
+                        <th>単価</th>
+                        <th>小計</th>
+                        <th>メモ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.product_name }}</td>
+                        <td>{{ order.quantity }}</td>
+                        <td>{{ order.price }}円</td>
+                        <td>{{ order.quantity|multiply:order.price }}円</td>
+                        <td>{{ order.notes|default:"-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="total-amount">
+                <p>商品合計: {{ total_cost }}円</p>
+                <p class="delivery-fee">配達料: {{ task.transaction.delivery_fee }}円</p>
+                <p>総合計: {{ task.transaction.total_cost }}円</p>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn">この依頼を受注する</button>
+            <a href="{% url 'worker_app:receive_request' %}" class="btn btn-secondary">戻る</a>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{% extends 'worker_app/base.html' %}
+{% load static %}
+
+{% block title %}完了済み依頼一覧 - ふらっとさ{% endblock %}
+
+{% block content %}
+<div class="request-list">
+    <h1>完了済み依頼一覧</h1>
+    {% if completed_requests %}
+        {% for request in completed_requests %}
+            <div class="request-item">
+                <h2>{{ request.title }}</h2>
+                <p>依頼者: {{ request.created_by.username }}</p>
+                <p>完了日時: {{ request.created_at|date:"Y/m/d H:i" }}</p>
+                <p>配達先: {{ request.delivery_address }}</p>
+                <p class="status-badge status-completed">完了済み</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-items">完了済みの依頼はありません。</p>
+    {% endif %}
+    
+    <div class="navigation-buttons">
+        <a href="{% url 'worker_app:mypage' %}" class="btn-outline">ホームに戻る</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'worker_app/base.html' %}
+{% load static %}
+
+{% block title %}受注ページ - ふらっとさ{% endblock %}
+
+{% block content %}
+<div class="request-list">
+    <h1>受注可能な依頼一覧</h1>
+    {% if tasks %}
+        {% for task in tasks %}
+            <div class="request-item">
+                <h2>{{ task.title }}</h2>
+                <p>依頼者: {{ task.created_by.username }}</p>
+                <p>依頼日時: {{ task.created_at|date:"Y/m/d H:i" }}</p>
+                <p>配達先: {{ task.delivery_address }}</p>
+                <div class="action-buttons">
+                    <form method="post" action="{% url 'worker_app:confirm_request' task.id %}">
+                        {% csrf_token %}
+                        <input type="submit" class="btn-primary" value="受注する">
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-items">現在受注可能な依頼はありません。</p>
+    {% endif %}
+    
+    <div class="navigation-buttons">
+        <a href="{% url 'worker_app:mypage' %}" class="btn-outline">マイページに戻る</a>
+    </div>
+</div>
+{% endblock %}

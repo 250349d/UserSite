@@ -1,0 +1,33 @@
+{% extends 'worker_app/base.html' %}
+{% load static %}
+
+{% block title %}配達費用入力 - ふらっとさ{% endblock %}
+
+{% block content %}
+<div class="submit-cost">
+    <h1>配達費用入力</h1>
+    
+    <div class="request-details">
+        <h2>依頼詳細</h2>
+        <div class="request-item">
+            <h3>{{ request.title }}</h3>
+            <p>依頼者: {{ request.client.username }}</p>
+            <p>配達先: {{ request.delivery_address }}</p>
+        </div>
+    </div>
+
+    <div class="cost-form">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="cost">配達費用（円）</label>
+                <input type="number" id="cost" name="cost" required min="0" step="1">
+            </div>
+            <div class="action-buttons">
+                <input type="submit" class="btn-primary" value="費用を確定">
+                <a href="{% url 'worker_app:mypage' %}" class="btn-outline">キャンセル</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

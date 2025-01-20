@@ -1,0 +1,35 @@
+{% extends 'worker_app/base.html' %}
+{% load static %}
+
+{% block title %}報酬確認 - ふらっとさ{% endblock %}
+
+{% block content %}
+<div class="reward-check">
+    <h1>報酬確認</h1>
+    
+    <div class="reward-summary">
+        <h2>総報酬額</h2>
+        <p class="total-reward">{{ total_reward }}円</p>
+    </div>
+
+    <div class="reward-list">
+        <h2>報酬詳細</h2>
+        {% if rewards %}
+            {% for reward in rewards %}
+                <div class="reward-item">
+                    <h3>{{ reward.request.title }}</h3>
+                    <p>完了日時: {{ reward.completed_at|date:"Y/m/d H:i" }}</p>
+                    <p>報酬額: {{ reward.amount }}円</p>
+                    <p class="status-badge">{{ reward.status }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-items">報酬履歴はありません。</p>
+        {% endif %}
+    </div>
+    
+    <div class="navigation-buttons">
+        <a href="{% url 'worker_app:mypage' %}" class="btn-outline">マイページに戻る</a>
+    </div>
+</div>
+{% endblock %}
