@@ -76,29 +76,43 @@ def submit_cost_view(request, pk):
     task = get_object_or_404(
         Task,
         pk=pk,
-        worker=request.user
+        worker=request.user,
+        status__in=['1', '3']  # 配達中または再申請のタスク
     )
+
+    # 依頼者の住所を取得
+    delivery_address = f"{task.client.post_code} {task.client.address} {task.client.street_address}"
 
     if request.method == 'POST':
         try:
             with transaction.atomic():
-                task.status = '2'  # Delivered
-                task.delivery_completion_time = timezone.now()
-                task.save()
+                # 既存の完了申請がある場合は削除
+                Request.objects.filter(task=task, status='2').delete()
 
-                # 配達完了時の申請を作成
+                # 新しい完了申請を作成
                 Request.objects.create(
                     task=task,
                     time=timezone.now(),
                     price=task.transaction.total_cost,
-                    status='0'  # Pending approval
+                    status='2'  # 承認待ち
                 )
+
+                # タスクのステータスを更新
+                task.status = '2'  # 承認待ち
+                task.delivery_completion_time = timezone.now()
+                task.save()
+
+                messages.success(request, '完了申請が送信されました。承認をお待ちください。')
                 return redirect('worker_app:accepted_requests')
         except Exception as e:
             print(f"Error submitting completion: {e}")
-            return HttpResponse("完了申請中にエラーが発生しました", status=500)
+            messages.error(request, '完了申請中にエラーが発生しました。')
+            return redirect('worker_app:accepted_requests')
 
-    return render(request, 'worker_app/submit_cost.html', {'task': task})
+    return render(request, 'worker_app/submit_cost.html', {
+        'task': task,
+        'delivery_address': delivery_address
+    })
 
 @login_required
 def cancel_request_view(request, pk):
@@ -106,8 +120,9 @@ def cancel_request_view(request, pk):
     if task.status == '1' and task.worker == request.user: # 確認
         if request.method == 'POST':
             task.status = 'C'  # Canceled
+            task.worker = None  # 作業者をクリア
             task.save()
-            return redirect('worker_app:mypage')
+            return redirect('worker_app:mypage')  # マイページに戻る
     return render(request, 'worker_app/cancel_request.html', {'task': task})
 
 @login_required
@@ -115,26 +130,50 @@ def approve_cost_view(request, pk):
     task = get_object_or_404(
         Task,
         pk=pk,
-        client=request.user
+        client=request.user,
+        status='2'  # 承認待ちのタスクのみ
     )
     
     if request.method == 'POST':
         try:
             with transaction.atomic():
-                completion_request = Request.objects.get(task=task, status='P')
-                completion_request.status = '1'  # Approved
+                # 最新の完了申請を取得
+                completion_request = Request.objects.filter(
+                    task=task, 
+                    status='2'  # 承認待ち
+                ).latest('time')
+                
+                # 申請を承認済みに更新
+                completion_request.status = '1'  # 承認済み
                 completion_request.save()
 
+                # タスクのステータスを更新
+                task.status = '4'  # 配達完了
+                task.save()
+
+                # トランザクションに報酬を設定
                 transaction_obj = task.transaction
                 transaction_obj.courier_reward_amount = int(completion_request.price * 0.8)  # 80%を報酬に
                 transaction_obj.save()
 
+                messages.success(request, '完了申請を承認しました。')
                 return redirect('requester_home')
+        except Request.DoesNotExist:
+            messages.error(request, '承認可能な完了申請が見つかりませんでした。')
         except Exception as e:
             print(f"Error approving completion: {e}")
-            return HttpResponse("承認中にエラーが発生しました", status=500)
+            messages.error(request, '承認中にエラーが発生しました。')
 
-    return render(request, 'worker_app/approve_cost.html', {'task': task})
+    # 完了申請の詳細を取得して表示
+    try:
+        completion_request = Request.objects.get(task=task, status='2')
+        return render(request, 'worker_app/approve_cost.html', {
+            'task': task,
+            'completion_request': completion_request
+        })
+    except Request.DoesNotExist:
+        messages.error(request, '承認可能な完了申請が見つかりませんでした。')
+        return redirect('requester_home')
 
 @login_required
 def accepted_requests_view(request):
@@ -144,11 +183,18 @@ def accepted_requests_view(request):
     now = timezone.now()
     tasks = Task.objects.select_related('transaction').prefetch_related('order').filter(
         worker=request.user,
-        status='1'  # Accepted
+        status__in=['1', '2', '3']  # Accepted, Waiting for Approval, Re-application
     ).order_by('limit_of_time')
     
     # 各タスクの期限状態を確認
     for task in tasks:
+        # 最新の申請情報を取得
+        try:
+            latest_request = Request.objects.filter(task=task).latest('time')
+            task.latest_request_status = latest_request.status
+        except Request.DoesNotExist:
+            task.latest_request_status = None
+
         if task.limit_of_time < now:
             task.is_overdue = True
         else:
