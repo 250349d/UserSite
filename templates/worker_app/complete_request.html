@@ -1,19 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>依頼完了</title>
-</head>
-<body>
-    <h1>依頼完了</h1>
-    <p>以下の依頼を完了しますか？</p>
-    <p><strong>タイトル:</strong> {{ request.title }}</p>
-    <p><strong>詳細:</strong> {{ request.description }}</p>
-    <form method="post">
+{% extends 'worker_app/base.html' %}
+{% load static %}
+
+{% block title %}配達完了報告 - ふらっとさ{% endblock %}
+
+{% block content %}
+<div class="complete-request">
+    <h1>配達完了報告</h1>
+    
+    <div class="request-details">
+        <h2>依頼内容</h2>
+        <div class="info-section">
+            <p><strong>タイトル:</strong> {{ task.title }}</p>
+            <p><strong>配達先:</strong> {{ delivery_address }}</p>
+            <p><strong>配達期限:</strong> {{ task.limit_of_time|date:"Y/m/d H:i" }}</p>
+            {% if task.transaction %}
+                <p><strong>商品合計:</strong> {{ task.transaction.total_cost }}円</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <form method="post" class="completion-form">
         {% csrf_token %}
-        <button type="submit">完了する</button>
+        <div class="confirmation">
+            <p>配達が完了しましたか？完了報告を送信すると、依頼者に承認リクエストが送られます。</p>
+        </div>
+        
+        <div class="button-group">
+            <button type="submit" class="btn-primary">完了報告を送信</button>
+            <a href="{% url 'worker_app:accepted_requests' %}" class="btn-outline">戻る</a>
+        </div>
     </form>
-    <a href="{% url 'worker_app:mypage' %}">戻る</a>
-</body>
-</html>
+</div>
+{% endblock %}

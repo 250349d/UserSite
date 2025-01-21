@@ -12,16 +12,17 @@
             padding: 20px;
         }
         .request-details {
-            border: 1px solid #ddd;
+            border: 1px solid #e6e6fa;
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 5px;
         }
         .shop-info {
-            background-color: #f8f9fa;
+            background-color: #f8f8ff;
             padding: 15px;
             border-radius: 5px;
             margin: 10px 0;
+            border-left: 4px solid #8a2be2;
         }
         .item-table {
             width: 100%;
@@ -29,12 +30,12 @@
             margin: 20px 0;
         }
         .item-table th, .item-table td {
-            border: 1px solid #ddd;
+            border: 1px solid #e6e6fa;
             padding: 8px;
             text-align: left;
         }
         .item-table th {
-            background-color: #f5f5f5;
+            background-color: #f8f8ff;
         }
         .total-amount {
             text-align: right;
@@ -42,17 +43,18 @@
             font-weight: bold;
             margin: 20px 0;
             padding: 10px;
-            background-color: #e9ecef;
+            background-color: #f8f8ff;
             border-radius: 5px;
+            border-left: 4px solid #8a2be2;
         }
         .delivery-fee {
-            color: #28a745;
+            color: #8a2be2;
             margin-top: 5px;
         }
         .btn {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #8a2be2;
             color: white;
             text-decoration: none;
             border: none;
@@ -61,16 +63,16 @@
             margin-right: 10px;
         }
         .btn:hover {
-            background-color: #0056b3;
+            background-color: #6a1b9a;
         }
         .btn-secondary {
-            background-color: #6c757d;
+            background-color: #9370db;
         }
         .btn-secondary:hover {
-            background-color: #5a6268;
+            background-color: #7b52c7;
         }
         .deadline {
-            color: #dc3545;
+            color: #8a2be2;
             font-weight: bold;
         }
     </style>
@@ -119,12 +121,12 @@
             </table>
             <div class="total-amount">
                 <p>商品合計: {{ total_cost }}円</p>
-                <p class="delivery-fee">配達料: {{ task.transaction.delivery_fee }}円</p>
-                <p>総合計: {{ task.transaction.total_cost }}円</p>
+                <p class="delivery-fee">配達料: {{ delivery_fee }}円</p>
+                <p>総合計: {{ total_cost|add:delivery_fee }}円</p>
             </div>
         </div>
 
-        <form method="post">
+        <form method="post" onsubmit="return confirm('この依頼を受注してもよろしいですか？');">
             {% csrf_token %}
             <button type="submit" class="btn">この依頼を受注する</button>
             <a href="{% url 'worker_app:receive_request' %}" class="btn btn-secondary">戻る</a>

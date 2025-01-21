@@ -1,18 +1,107 @@
 {% extends 'worker_app/base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}配達費用入力 - ふらっとさ{% endblock %}
 
 {% block content %}
+<style>
+    .submit-cost {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .request-details {
+        background-color: #f8f8ff;
+        border: 1px solid #e6e6fa;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .info-section {
+        margin: 15px 0;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 5px;
+        border-left: 4px solid #8a2be2;
+    }
+    .info-section h3 {
+        color: #8a2be2;
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+    .cost-form {
+        background-color: #f8f8ff;
+        border: 1px solid #e6e6fa;
+        border-radius: 5px;
+        padding: 20px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #8a2be2;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #e6e6fa;
+        border-radius: 4px;
+    }
+    .action-buttons {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+    }
+    .btn-primary {
+        padding: 10px 20px;
+        background-color: #8a2be2;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .btn-primary:hover {
+        background-color: #6a1b9a;
+    }
+    .btn-outline {
+        padding: 10px 20px;
+        background-color: transparent;
+        color: #8a2be2;
+        border: 1px solid #8a2be2;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+    .btn-outline:hover {
+        background-color: #f0e6ff;
+    }
+</style>
+
 <div class="submit-cost">
     <h1>配達費用入力</h1>
     
     <div class="request-details">
         <h2>依頼詳細</h2>
-        <div class="request-item">
-            <h3>{{ request.title }}</h3>
-            <p>依頼者: {{ request.client.username }}</p>
-            <p>配達先: {{ request.delivery_address }}</p>
+        
+        <div class="info-section">
+            <h3>依頼者情報</h3>
+            <p><strong>氏名:</strong> {{ request.client.last_name }} {{ request.client.first_name }}</p>
+            <p><strong>配達先住所:</strong> 〒{{ request.client.post_code }} {{ request.client.address }}{{ request.client.street_address }}</p>
+        </div>
+
+        <div class="info-section">
+            <h3>店舗情報</h3>
+            <p><strong>店舗名:</strong> {{ request.shop_name }}</p>
+            <p><strong>住所:</strong> 〒{{ request.shop_post_code }} {{ request.shop_address }}{{ request.shop_street_address }}</p>
+        </div>
+
+        <div class="info-section">
+            <h3>金額情報</h3>
+            <p><strong>商品合計:</strong> {{ total_cost }}円</p>
+            <p><strong>配達料:</strong> {{ request.transaction.delivery_fee }}円</p>
+            <p><strong>総合計:</strong> {{ total_cost|add:request.transaction.delivery_fee }}円</p>
         </div>
     </div>
 

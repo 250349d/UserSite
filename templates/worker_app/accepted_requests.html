@@ -1,37 +1,149 @@
 {% extends 'worker_app/base.html' %}
+{% load static %}
 {% load custom_filters %}
+
 {% block title %}受注済み依頼一覧 - ふらっとさ{% endblock %}
 
 {% block content %}
+<style>
+    .request-list {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .request-item {
+        border: 1px solid #e6e6fa;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+    .info-section {
+        margin: 15px 0;
+        padding: 15px;
+        background-color: #f8f8ff;
+        border-radius: 5px;
+        border-left: 4px solid #8a2be2;
+    }
+    .info-section h3 {
+        color: #8a2be2;
+        margin-top: 10px;
+        margin-bottom: 15px;
+    }
+    .order-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+    }
+    .order-table th,
+    .order-table td {
+        border: 1px solid #e6e6fa;
+        padding: 8px;
+        text-align: left;
+    }
+    .order-table th {
+        background-color: #f8f8ff;
+        color: #8a2be2;
+    }
+    .status-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        border-radius: 3px;
+        font-weight: bold;
+    }
+    .status-overdue {
+        background-color: #ff69b4;
+        color: white;
+    }
+    .status-urgent {
+        background-color: #dda0dd;
+        color: white;
+    }
+    .button-group {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    .chat-link {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #8a2be2;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    .chat-link:hover {
+        background-color: #6a1b9a;
+        color: white;
+        text-decoration: none;
+    }
+    .btn-primary {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #8a2be2;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    .btn-primary:hover {
+        background-color: #6a1b9a;
+        color: white;
+        text-decoration: none;
+    }
+    .btn-danger {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #ff69b4;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    .btn-danger:hover {
+        background-color: #ff1493;
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
 <div class="request-list">
     <h1>受注済み依頼一覧</h1>
     
     {% if not tasks %}
-        <p class="empty-message">現在、受注している依頼はありません。</p>
+        <p class="no-items">現在、受注している依頼はありません。</p>
     {% else %}
         {% for task in tasks %}
-            <div class="card {% if task.is_overdue %}danger{% elif task.is_urgent %}warning{% endif %}">
+            <div class="request-item {% if task.is_overdue %}danger{% elif task.is_urgent %}warning{% endif %}">
                 {% if task.is_overdue %}
-                    <div class="badge badge-danger">期限切れ</div>
+                    <div class="status-badge status-overdue">期限切れ</div>
                 {% elif task.is_urgent %}
-                    <div class="badge badge-warning">急いで配達してください！</div>
+                    <div class="status-badge status-urgent">急いで配達してください！</div>
                 {% endif %}
                 
                 <h2>{{ task.title }}</h2>
-                <div class="info-item"><strong>配達期限:</strong> {{ task.limit_of_time|date:"Y/m/d H:i" }}</div>
-                
                 <div class="info-section">
+                    <p><strong>配達期限:</strong> {{ task.limit_of_time|date:"Y/m/d H:i" }}</p>
+                    
+                    <h3>依頼者情報</h3>
+                    <p><strong>氏名:</strong> {{ task.client.last_name }} {{ task.client.first_name }}</p>
+                    <p><strong>住所:</strong> 〒{{ task.client.post_code }} {{ task.client.address }}{{ task.client.street_address }}</p>
+                    
                     <h3>店舗情報</h3>
-                    <div class="info-item"><strong>店舗名:</strong> {{ task.shop_name }}</div>
-                    <div class="info-item"><strong>住所:</strong> {{ task.shop_address }}</div>
-                    <div class="info-item"><strong>番地:</strong> {{ task.shop_street_address }}</div>
-                    <div class="info-item"><strong>郵便番号:</strong> {{ task.shop_post_code }}</div>
+                    <p><strong>店舗名:</strong> {{ task.shop_name }}</p>
+                    <p><strong>住所:</strong> {{ task.shop_address }}</p>
+                    <p><strong>番地:</strong> {{ task.shop_street_address }}</p>
+                    <p><strong>郵便番号:</strong> {{ task.shop_post_code }}</p>
                 </div>
                 
                 {% if task.orders.all %}
                     <div class="info-section">
                         <h3>注文商品</h3>
-                        <table class="table">
+                        <table class="order-table">
                             <thead>
                                 <tr>
                                     <th>商品名</th>
@@ -56,30 +168,25 @@
                 
                 {% if task.transaction %}
                     <div class="info-section">
-                        <div class="info-item"><strong>商品合計:</strong> {{ task.transaction.total_cost }}円</div>
-                        <div class="info-item"><strong>配達料:</strong> {{ task.transaction.delivery_fee }}円</div>
-                        <div class="info-item"><strong>総合計:</strong> {{ task.transaction.total_cost|add:task.transaction.delivery_fee }}円</div>
-                    </div>
-                {% endif %}
-                
-                {% if task.is_overdue %}
-                    <div class="danger">
-                        この依頼は期限を過ぎています。至急配達を完了してください。
-                    </div>
-                {% elif task.is_urgent %}
-                    <div class="warning">
-                        配達期限まで残り1時間を切っています。急いで配達を完了してください。
+                        <p><strong>商品合計:</strong> {{ task.transaction.total_cost }}円</p>
+                        <p><strong>配達料:</strong> {{ task.transaction.delivery_fee }}円</p>
+                        <p><strong>総合計:</strong> {{ task.transaction.total_cost|add:task.transaction.delivery_fee }}円</p>
                     </div>
                 {% endif %}
                 
                 <div class="button-group">
-                    <a href="{% url 'worker_app:submit_cost' pk=task.id %}" class="btn btn-success">配達完了・費用申請</a>
-                    <a href="{% url 'worker_app:cancel_request' pk=task.id %}" class="btn btn-danger" onclick="return confirm('この依頼をキャンセルしますか？');">キャンセル</a>
+                    {% if task.status == '1' %}
+                        <a href="{% url 'chat_app:chat' task.id %}" class="chat-link">チャット</a>
+                        <a href="{% url 'worker_app:submit_cost' pk=task.id %}" class="btn-primary">配達完了報告</a>
+                        <a href="{% url 'worker_app:cancel_request' pk=task.id %}" class="btn-danger" onclick="return confirm('この依頼をキャンセルしますか？');">キャンセル</a>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
     {% endif %}
     
-    <a href="{% url 'worker_app:mypage' %}" class="btn btn-secondary">ホームに戻る</a>
+    <div class="navigation-buttons">
+        <a href="{% url 'worker_app:mypage' %}" class="btn-outline">マイページへ戻る</a>
+    </div>
 </div>
 {% endblock %}

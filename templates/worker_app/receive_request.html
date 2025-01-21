@@ -4,20 +4,56 @@
 {% block title %}受注ページ - ふらっとさ{% endblock %}
 
 {% block content %}
+<style>
+    .request-item {
+        border: 1px solid #e6e6fa;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+    .shop-info {
+        background-color: #f8f8ff;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 5px;
+        border-left: 4px solid #8a2be2;
+    }
+    .shop-info h3 {
+        margin-top: 0;
+        color: #8a2be2;
+        font-size: 1.1em;
+    }
+    .action-buttons {
+        margin-top: 15px;
+    }
+    .btn-primary {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #8a2be2;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    .btn-primary:hover {
+        background-color: #6a1b9a;
+    }
+</style>
+
 <div class="request-list">
     <h1>受注可能な依頼一覧</h1>
     {% if tasks %}
         {% for task in tasks %}
             <div class="request-item">
                 <h2>{{ task.title }}</h2>
-                <p>依頼者: {{ task.created_by.username }}</p>
+                <p>依頼者: {{ task.client.last_name }} {{ task.client.first_name }}</p>
                 <p>依頼日時: {{ task.created_at|date:"Y/m/d H:i" }}</p>
-                <p>配達先: {{ task.delivery_address }}</p>
+                <div class="shop-info">
+                    <h3>店舗情報</h3>
+                    <p>店舗名: {{ task.shop_name }}</p>
+                    <p>住所: 〒{{ task.shop_post_code }} {{ task.shop_address }}{{ task.shop_street_address }}</p>
+                </div>
                 <div class="action-buttons">
-                    <form method="post" action="{% url 'worker_app:confirm_request' task.id %}">
-                        {% csrf_token %}
-                        <input type="submit" class="btn-primary" value="受注する">
-                    </form>
+                    <a href="{% url 'worker_app:confirm_request' task.id %}" class="btn-primary">受注する</a>
                 </div>
             </div>
         {% endfor %}
