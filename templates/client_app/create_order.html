@@ -3,99 +3,104 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-	<meta charset="UTF-8">
-	<title>ふらっとさ</title>
-	 {% comment %} <link rel="stylesheet" href="{% static 'client_app/css/create_order.css' %}"> {% endcomment %}
-	<metaname="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{% static 'css/sample.css' %}" rel ="stylesheet">
-	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
-	<script>
-		const submitOrderUrl= "{% url 'client_app:create-order' %}";
-		const checkOrderUrl= "{% url 'client_app:check-order' %}";
-	</script>
-	<script src="{% static 'client_app/js/create_order.js' %}"></script>
+    <meta charset="UTF-8">
+    <title>ふらっとさ - 注文作成</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'client_app/css/create_order.css' %}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script>
+        const submitOrderUrl = "{% url 'client_app:create-order' %}";
+        const checkOrderUrl = "{% url 'client_app:check-order' %}";
+    </script>
+    <script src="{% static 'client_app/js/create_order.js' %}"></script>
 </head>
-<body>
-	<div class="logo">
-        <img class="furattosalogo" src="{% static 'login_app/images/furattosalogo.png' %}"  width="246" height="82"> 
+<body class="bg-light">
+    <div class="container">
+        <div class="logo mt-4">
+            <img class="img-fluid" src="{% static 'login_app/images/furattosalogo.png' %}" alt="ふらっとさロゴ" width="246">
+        </div>
+
+        <div class="form-container">
+            <h1 class="page-title text-center mb-4">注文作成</h1>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">件名</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+
+                    <h2 class="section-title mb-3">注文詳細</h2>
+                    <div class="table-responsive order-table">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>商品名</th>
+                                    <th>単価</th>
+                                    <th>個数</th>
+                                    <th>小計</th>
+                                    <th>備考</th>
+                                </tr>
+                            </thead>
+                            <tbody id="order-fields">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button type="button" class="btn btn-outline-primary btn-add-item" onclick="addOrderField()">
+                        <i class="bi bi-plus-circle"></i> 商品を追加
+                    </button>
+
+                    <div class="total-price-container">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <label for="total-price" class="form-label mb-0">合計金額:</label>
+                                <div class="input-group">
+                                    <input id="total-price" type="number" class="form-control" min="0" value="0" readonly>
+                                    <span class="input-group-text">円</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="limit-of-time" class="form-label mb-0">配達期限:</label>
+                                <input type="datetime-local" class="form-control" id="limit-of-time" name="limit_of_time" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="section-title mb-3">店舗情報入力</h2>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="shop-name" class="form-label">店名</label>
+                            <input type="text" class="form-control" id="shop-name" name="shop_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="shop-post-code" class="form-label">郵便番号</label>
+                            <input type="text" class="form-control" id="shop-post-code" name="shop_post_code" placeholder="000-0000" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="shop-address" class="form-label">高知県香美市土佐山田町</label>
+                            <input type="text" class="form-control" id="shop-address" name="shop_address" placeholder="町域" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="shop-street-address" class="form-label">番地</label>
+                            <input type="text" class="form-control" id="shop-street-address" name="shop_street_address" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+                <button type="button" class="btn btn-secondary me-md-2" onclick="history.back()">戻る</button>
+                <button type="button" class="btn btn-primary" onclick="submitOrder()">注文確定</button>
+            </div>
+        </div>
     </div>
-	
-		<h1  class="c_create_order">注文作成</h1>
-		<div class="t_create_order">
-			<label for="title">件名</label>
-			<input type="text" id="title" name="title" required><br>
-		
-		<h2>注文詳細</h2>
-		</div>
 
-		<div class="order_table_wrap">
-			<div class="order_table">
-			<table>
-				<thead>
-					<tr>
-						{% comment %} <th>商品名</th>
-						<th>単価</th>
-						<th>個数</th>
-						<th>小計</th>
-						<th>備考</th> {% endcomment %}
-						<td>商品名</td>
-						<td>単価</td>
-						<td>個数</td>
-						<td>小計</td>
-						<td>備考</td>
-					</tr>
-				</thead>
-		
-				<tbody id="order-fields"></tbody>
-			</table>
-			</div>
-		</div>
-		
-
-			
-	
-		<div align="center">
-			<button type="button" class="create_table" onclick="addOrderField()">商品を追加</button><br>
-			<div class="total">
-			<label for="total-price">合計金額:</label>
-			<input id="total-price" type="number" min="0" value="0" readonly> 円<br>
-			</div>
-
-			<div class="limit">
-			<label for="limit-of-time">配達期限:</label>
-			<input type="datetime-local" id="limit-of-time" name="limit_of_time" required><br>
-			</div>
-		</div>
-
-	<br>
-
-	<form>
-	<div class="shop_info">
-		<h2>店舗情報入力</h2>
-
-		<div class="shop_name">
-			<label for="shop-name">店名</label>
-			<input type="text" id="shop-name" name="shop_name" required><br>
-		</div>
-
-		<div>
-			<label for="shop-post-code">郵便番号</label>
-			<input type="text" id="shop-post-code" name="shop_post_code" placeholder="000-0000" required><br>
-		</div>
-
-		<div>
-			<label for="shop-address">高知県香美市土佐山田町</label>
-			<input type="text" id="shop-address" name="shop_address" placeholder="町域" required><br>
-		</div>
-
-		<div>
-			<label for="shop-street-address">番地</label>
-			<input type="text" id="shop-street-address" name="shop_street_address" required><br>
-		</div>
-
-	<button type="button" class="order_confirmed" onclick="submitOrder()">注文確定</button>
-	<button type="button" class="return" onclick="history.back()">戻る</button>
-	</div>
-</form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
