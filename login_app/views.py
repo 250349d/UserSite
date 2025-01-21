@@ -30,5 +30,4 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-
-    return redirect('home_app:homepage')
+    return redirect('login_app:login')

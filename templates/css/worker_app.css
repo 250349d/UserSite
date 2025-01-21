@@ -1,0 +1,780 @@
+/* client_appのスタイルを継承 */
+@import url('sample.css');
+
+/* worker_app用のカラーオーバーライド */
+/* メインカラー: #6B4EE6 (深い紫) */
+/* アクセントカラー: #9B7EFF (明るい紫) */
+/* 補助カラー: #E6E0FF (薄い紫) */
+
+/* ベーススタイル */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* コンテンツコンテナ */
+.content-container {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* ロゴ */
+.logo {
+    text-align: center;
+    margin: 60px 0 40px;
+    padding-top: 20px;
+}
+
+.furattosalogo {
+    width: auto;
+    height: 82px;
+}
+
+/* ボタンコンテナ */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 75%;
+    margin: 0 auto;
+}
+
+/* ボタンスタイル */
+.create_order,
+.check_order,
+.check_completed,
+.check_payment {
+    display: inline-block;
+    width: 100%;
+    padding: 15px 30px;
+    background-color: white;
+    border: 2px solid #6B4EE6;
+    color: #6B4EE6;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.create_order:hover,
+.check_order:hover,
+.check_completed:hover,
+.check_payment:hover {
+    background-color: #6B4EE6;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(107, 78, 230, 0.2);
+}
+
+/* メニューのデザイン */
+.nav_content {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    background: #E6E0FF;
+    transition: .5s;
+    text-align: center;
+    padding-top: 40px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* メニューロゴ */
+.menu_logo {
+    padding: 60px 0 30px;
+    margin-bottom: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu_logo img {
+    width: auto;
+    height: 82px;
+    margin: 0 auto;
+}
+
+.nav_list {
+    list-style: none;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    margin: 0;
+    width: 100%;
+}
+
+.nav_list p {
+    margin: 0;
+    width: 75%;
+}
+
+.nav_list a {
+    display: block;
+    width: 100%;
+    padding: 1.5rem;
+    color: #6B4EE6;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav_list a:hover {
+    color: white;
+    background-color: #6B4EE6;
+}
+
+#drawer_input:checked ~ .nav_content {
+    bottom: 0;
+    margin: 0;
+}
+
+/* ハンバーガーメニュー */
+.drawer_hidden {
+    display: none;
+}
+
+.drawer_open {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    top: 0;
+    z-index: 100;
+    cursor: pointer;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(107, 78, 230, 0.2);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.drawer_open span,
+.drawer_open span:before,
+.drawer_open span:after {
+    content: '';
+    display: block;
+    height: 3px;
+    width: 25px;
+    border-radius: 3px;
+    background: #6B4EE6;
+    transition: 0.5s;
+    position: absolute;
+}
+
+.drawer_open span:before {
+    bottom: 8px;
+}
+
+.drawer_open span:after {
+    top: 8px;
+}
+
+#drawer_input:checked ~ .drawer_open {
+    background-color: #6B4EE6;
+}
+
+#drawer_input:checked ~ .drawer_open span {
+    background: rgba(255, 255, 255, 0);
+}
+
+#drawer_input:checked ~ .drawer_open span::before {
+    bottom: 0;
+    transform: rotate(45deg);
+    background: white;
+}
+
+#drawer_input:checked ~ .drawer_open span::after {
+    top: 0;
+    transform: rotate(-45deg);
+    background: white;
+}
+
+/* リクエストリスト */
+.request-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.request-list h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.empty-message {
+    text-align: center;
+    color: #666;
+    padding: 40px 0;
+    font-size: 16px;
+}
+
+/* カード */
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.card h2 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+.card h3 {
+    color: #6B4EE6;
+    font-size: 16px;
+    margin: 20px 0 12px;
+}
+
+/* バッジ */
+.badge {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #333;
+}
+
+/* 情報セクション */
+.info-section {
+    margin: 20px 0;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.info-item {
+    margin: 8px 0;
+    color: #666;
+}
+
+.info-item strong {
+    color: #333;
+    margin-right: 8px;
+}
+
+/* テーブル */
+.table {
+    width: 100%;
+    margin: 16px 0;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table th {
+    background: #f8f9fa;
+    color: #333;
+    font-weight: bold;
+}
+
+.table td {
+    color: #666;
+}
+
+/* 警告メッセージ */
+.danger {
+    background-color: #fff3f3;
+    color: #dc3545;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 16px 0;
+    font-weight: bold;
+}
+
+.warning {
+    background-color: #fff8e1;
+    color: #856404;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 16px 0;
+    font-weight: bold;
+}
+
+/* ボタングループ */
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* フォーム要素 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #6B4EE6;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #E6E0FF;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #6B4EE6;
+    box-shadow: 0 0 0 3px rgba(107, 78, 230, 0.1);
+}
+
+/* メッセージ */
+.message {
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.message.success {
+    background-color: #9B7EFF;
+}
+
+.message.error {
+    background-color: #6B4EE6;
+}
+
+/* 共通コンポーネント */
+h1, h2, h3 {
+    color: #6B4EE6;
+    margin-bottom: 1rem;
+}
+
+.btn-primary {
+    background: #6B4EE6;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #9B7EFF;
+}
+
+.btn-outline {
+    background: transparent;
+    color: #6B4EE6;
+    padding: 0.8rem 1.5rem;
+    border: 2px solid #6B4EE6;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background: #6B4EE6;
+    color: white;
+}
+
+/* リストアイテム */
+.request-item {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(107, 78, 230, 0.1);
+    border-left: 4px solid #6B4EE6;
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.request-item {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* メニューリンク */
+.nav_list p a {
+    color: #6B4EE6;
+}
+
+.nav_list p a:hover {
+    color: #9B7EFF;
+}
+
+/* ボタンスタイル */
+.create_order,
+.check_order,
+.check_completed,
+.check_payment {
+    border: solid 2px #6B4EE6;
+    color: #6B4EE6;
+}
+
+.create_order:hover,
+.check_order:hover,
+.check_completed:hover,
+.check_payment:hover {
+    background-color: #6B4EE6;
+    color: #fff;
+}
+
+/* メッセージとステータス */
+.message.success {
+    background-color: #9B7EFF;
+}
+
+.message.error {
+    background-color: #6B4EE6;
+}
+
+/* ボーダー */
+.menu-section {
+    border-color: #6B4EE6;
+}
+
+/* アクティブ状態 */
+.active {
+    background-color: #6B4EE6;
+    color: white;
+}
+
+/* リンク */
+a {
+    color: #6B4EE6;
+}
+
+a:hover {
+    color: #9B7EFF;
+}
+
+/* テーブル */
+th {
+    background-color: #6B4EE6;
+    color: white;
+}
+
+/* 報酬確認ページ */
+.reward-check {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.reward-check h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+/* 報酬サマリー */
+.reward-summary {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reward-summary h2 {
+    color: #6B4EE6;
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.total-reward {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 報酬リスト */
+.reward-list {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.reward-list h2 {
+    color: #6B4EE6;
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #6B4EE6;
+    padding-bottom: 10px;
+}
+
+.reward-item {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.reward-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reward-item h3 {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.reward-item p {
+    color: #666;
+    margin: 8px 0;
+}
+
+.status-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background-color: #6B4EE6;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.no-items {
+    text-align: center;
+    color: #666;
+    padding: 40px 0;
+    font-size: 16px;
+}
+
+/* ナビゲーションボタン */
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.btn-outline {
+    display: inline-block;
+    padding: 12px 24px;
+    border: 2px solid #6B4EE6;
+    color: #6B4EE6;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background-color: #6B4EE6;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(107, 78, 230, 0.2);
+}
+
+/* キャンセルリクエストページ */
+.cancel-request {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.cancel-request h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.cancel-card {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+}
+
+.warning-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    background-color: #FFF3F3;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+}
+
+.warning-icon i {
+    color: #DC3545;
+    font-size: 48px;
+}
+
+.cancel-card h2 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.task-details {
+    background-color: #F8F9FA;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #E9ECEF;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-item strong {
+    color: #666;
+    font-weight: normal;
+}
+
+.detail-item span {
+    color: #333;
+    font-weight: bold;
+}
+
+.cancel-warning {
+    background-color: #FFF3F3;
+    color: #DC3545;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.cancel-form .form-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.btn {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-size: 14px;
+}
+
+.btn-secondary {
+    background-color: #6C757D;
+    color: white;
+    border: 2px solid #6C757D;
+}
+
+.btn-danger {
+    background-color: #DC3545;
+    color: white;
+    border: 2px solid #DC3545;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
