@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 
 app_name = 'worker_app'
 urlpatterns = [
-    path('mypage/', TemplateView.as_view(template_name='worker_app/mypage.html'), name='mypage'), # マイページを表示
+    path('mypage/', views.mypage_view, name='mypage'), # マイページを表示
 
     path('receive/', views.receive_request_view, name='receive_request'), # 依頼受注（一覧）
     path('confirm_request/<int:pk>/', views.confirm_request_view, name='confirm_request'), # 依頼受注（詳細）
