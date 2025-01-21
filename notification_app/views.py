@@ -1,34 +1,20 @@
 import datetime
 from django.shortcuts import render, redirect
-from django.db import connections
-from collections import namedtuple
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-
-def namedtuplefetchall(cursor):
-    desc = cursor.description
-    nt_result = namedtuple("object", [col[0] for col in desc])
-    return [nt_result(*row) for row in cursor.fetchall()]
+from .models import Notification
 
 def get_all_objects():
     now = datetime.date.today()
-    print(now)
-    with connections["manager_data"].cursor() as cursor:
-        cursor.execute("SELECT * FROM notification_app_notification WHERE limit_of_time > date %s ORDER BY created_at DESC", [now])
-        results = namedtuplefetchall(cursor)
+    return Notification.objects.filter(
+        limit_of_time__gt=now
+    ).order_by('-created_at')
 
-    return results
-
-def get_filtered_objects_id(expression):
-    with connections["manager_data"].cursor() as cursor:
-        try:
-            cursor.execute("SELECT * FROM notification_app_notification WHERE id=%s", str(expression))
-            results = namedtuplefetchall(cursor)
-        except TypeError:
-            print('TypeError')
-            results = None
-
-    return results
+def get_filtered_objects_id(notification_id):
+    try:
+        return Notification.objects.filter(id=notification_id)
+    except (ValueError, TypeError):
+        print('TypeError')
+        return None
 
 @login_required
 def list_view(request):
@@ -41,7 +27,7 @@ def list_view(request):
 @login_required
 def detail_view(request, notification_id):
     objects = get_filtered_objects_id(notification_id)
-    if objects == None:
+    if objects is None or not objects.exists():
         return redirect(to='/notfound/')
     params = {
         'objects': objects
