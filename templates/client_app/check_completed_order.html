@@ -13,16 +13,20 @@
     </div>
 	{% if tasks %}
 		{% for task in tasks %}
+		<div class="order_container2">
 			<div class="order-container">
 				<span>{{ task.title }}>></span>
 				<a href="{% url 'client_app:check-completed-order-detail' task.id %}">注文詳細</a>
 			</div>
 			<div>注文日 {{ task.created_at }}</div>
+		</div>
 			<br>
 		{% endfor %}
 	{% else %}
-		<h1>完了済み依頼はありません</h1>
+		<h2>完了済み依頼はありません</h2>
 	{% endif %}
+	<div class="order_detail_return">
 	<button type="button" class="return" onclick="history.back()">戻る</button>
+	</div>
 </body>
 </html>

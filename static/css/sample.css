@@ -384,7 +384,7 @@ form .decision{
     bottom: 100%;
     left: 0%; /* メニューを画面の外に飛ばす */
     z-index: 99;
-    background: rgb(181, 244, 255);
+    background: rgb(123, 209, 246);
     transition: .5s;
     text-align: center;
     padding-top: 20px;
@@ -530,6 +530,11 @@ button[type="button"].create_table:hover {
     font-size: 18px;
 }
 
+.order_confirmed:hover {
+    color:  #fff;
+    background-color: #2495e0;
+}
+
 .return{
     width:30%;
     margin-top: 150px;  /* 必要な空白の大きさに調整 */
@@ -542,12 +547,130 @@ button[type="button"].create_table:hover {
     font-size: 18px;
 }
 
+.return:hover {
+    color:  #fff;
+    background-color: #2495e0;
+}
+
 .shop_info{
     text-align:center;
     margin: 50px auto;
 }
 
+.order_table_wrap{
+    overflow-x: scroll; /* 横スクロールを許可 */
+}
+
+.order_table{
+    width: 2000px;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+/* 注文確認 */
+.check_order_container{
+    text-align:center;
+}
+
+.order_container{
+    width:90%;
+    background-color: #fff;
+    border: solid 2px #000000;
+    color: #000000;
+    border-radius: 25px;        /*図形の角の丸さ */
+    padding: 2% 3%;
+    text-decoration: none;
+    font-size: 18px;
+    margin-top: 30px;  /* 必要な空白の大きさに調整 */
+}
+
+.order_detail{
+    margin-top: 30px;  /* 必要な空白の大きさに調整 */
+}
+
+.order_status{
+    width:30%;
+    background-color: #fff;
+    border: solid 2px #2495e0;
+    color: #bb0ce7eb;
+    border-radius: 10px;        /*図形の角の丸さ */
+    padding: 8px 13px;
+    text-decoration: none;
+    font-size: 18px;
+    display: inline-block;
+    margin-top: 10px;  /* 必要な空白の大きさに調整 */
+}
+
+.order_chat,
+.check_accept,
+.cancel{
+        width:37%;
+        background-color: #fff;
+        border: solid 2px #2495e0;
+        color: #2495e0;
+        border-radius: 10px;        /*図形の角の丸さ */
+        padding: 8px 13px;
+        text-decoration: none;
+        font-size: 18px;
+        margin-top: 10px;  /* 必要な空白の大きさに調整 */
+    }
+    
+.order_chat:hover,
+.check_accept:hover,
+.cancel:hover {
+    color:  #fff;
+    background-color: #2495e0;
+    }
+
+.order_day{
+    margin-top: 10px;
+}
+
+.order_container2{
+    text-align:center;
+    width:90%;
+    background-color: #fff;
+    border: solid 2px #000000;
+    color: #000000;
+    border-radius: 18px;        /*図形の角の丸さ */
+    padding: 2% 3%;
+    text-decoration: none;
+    font-size: 18px;
+    margin-top: 30px;  /* 必要な空白の大きさに調整 */
+}
+
+.order_detail_return,
+.payment_return,
+.cannot_order{
+    text-align:center;
+}
+
 /* 注文詳細 */
 .order_address{
     color: #2495e0;
+}
+
+.order_container3{
+    text-align:center;
+    width:90%;
+    background-color: #fff;
+    border: solid 2px #000000;
+    color: #000000;
+    border-radius: 18px;        /*図形の角の丸さ */
+    padding: 2% 3%;
+    text-decoration: none;
+    font-size: 18px;
+    margin-top: 30px;  /* 必要な空白の大きさに調整 */
+}
+
+.payment{
+    width:37%;
+    background-color: #fff;
+    border: solid 2px #2495e0;
+    color: #2495e0;
+    border-radius: 10px;        /*図形の角の丸さ */
+    padding: 8px 13px;
+    text-decoration: none;
+    font-size: 18px;
+    margin-top: 10px;  /* 必要な空白の大きさに調整 */
 }

@@ -20,20 +20,26 @@
     </div>
 	{% if tasks %}
 		{% for task in tasks %}
+		<div class="order_container3">
 			<div class="order-container">
 				<span>{{ task.title }}>></span>
 				<a href="{% url 'client_app:check-payment-detail' task.id %}">注文詳細</a>
 
 				<br>
 
-				<button type="button" onclick="showCost('{{ task.id }}')">お支払いへ進む</button>
+				<button type="button" class="payment" onclick="showCost('{{ task.id }}')">お支払いへ進む</button>
 			</div>
 			<div>注文日 {{ task.created_at }}</div>
+		</div>
 			<br>
 		{% endfor %}
 	{% else %}
-		<h1>お支払いできる注文がありません</h1>
+		<div class="cannot_order">
+		<h2>お支払いできる注文がありません</h2>
+		</div>
 	{% endif %}
+	<div class="payment_return">
 	<button type="button" class="return" onclick="history.back()">戻る</button>
+	</div>
 </body>
 </html>

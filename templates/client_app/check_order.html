@@ -22,13 +22,17 @@
     </div>
 	{% if tasks %}
 		{% for task in tasks %}
-			<div class="order-container">
+		<div class="check_order_container">
+			<div class="order_container">
+				<div class="order_detail">
 				<span>{{ task.title }}>></span>
 				<a href="{% url 'client_app:check-order-detail' task.id %}">注文詳細</a>
+				</div>
 
 				<br>
 
-				<span>
+				<div class="button4">
+				<span class="order_status">
 					{% if task.status == '0' %}
 						注文済み
 					{% elif task.status == '1' %}
@@ -42,20 +46,22 @@
 					{% endif %}
 				</span>
 
-				<a href="{% url 'chat_app:chat' task.id %}">チャット</a>
+				<input type="submit" class="order_chat" value="チャット" onclick="location.href='{% url 'login_app:login' %}'">
 
 				<br>
 
-				<button type="button" onclick="confirmRequest('{{ task.id }}')">申請確認</button>
+				<button type="button" class="check_accept" onclick="confirmRequest('{{ task.id }}')">申請確認</button>
 
-				<button type="button" onclick="cancelOrder('{{ task.id }}')">キャンセル</button>
+				<button type="button" class="cancel" onclick="cancelOrder('{{ task.id }}')">キャンセル</button>
+				</div>
 			</div>
-			<div>注文日 {{ task.created_at }}</div>
+			<div class="order_day">注文日 {{ task.created_at }}</div>
 			<br>
 		{% endfor %}
 	{% else %}
 		<h1>まだ何も注文していません</h1>
 	{% endif %}
-	<button type="button" class="return" onclick="history.back()">戻る</button>
+		<button type="button" class="return" onclick="history.back()">戻る</button>
+		</div>
 </body>
 </html>

@@ -5,8 +5,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>ふらっとさ</title>
-	{% comment %} <link rel="stylesheet" href="{% static 'client_app/css/create_order.css' %}"> {% endcomment %}
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	 {% comment %} <link rel="stylesheet" href="{% static 'client_app/css/create_order.css' %}"> {% endcomment %}
+	<metaname="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{% static 'css/sample.css' %}" rel ="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 	<script>
@@ -22,13 +22,14 @@
 	
 		<h1  class="c_create_order">注文作成</h1>
 		<div class="t_create_order">
-			<form>
 			<label for="title">件名</label>
 			<input type="text" id="title" name="title" required><br>
-			</form>
 		
+		<h2>注文詳細</h2>
+		</div>
 
-			<h2>注文詳細</h2>
+		<div class="order_table_wrap">
+			<div class="order_table">
 			<table>
 				<thead>
 					<tr>
@@ -44,13 +45,17 @@
 						<td>備考</td>
 					</tr>
 				</thead>
-				<tbody id="order-fields">
-				</tbody>
+		
+				<tbody id="order-fields"></tbody>
 			</table>
-
-			<button type="button" class="create_table" onclick="addOrderField()">商品を追加</button><br>
+			</div>
 		</div>
+		
+
+			
+	
 		<div align="center">
+			<button type="button" class="create_table" onclick="addOrderField()">商品を追加</button><br>
 			<div class="total">
 			<label for="total-price">合計金額:</label>
 			<input id="total-price" type="number" min="0" value="0" readonly> 円<br>
